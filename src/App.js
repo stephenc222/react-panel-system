@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
+import { cloneDeep } from 'lodash';
 import PanelManager from './components/PanelManager'
+import {updateGraph} from './components/PanelManager/PanelGraph'
 import './App.css';
 
 /**
@@ -14,19 +16,30 @@ import './App.css';
 
 // All Panels "start" at top left, and all panels are offset from the relative "{0,0}" of the PanelManager itself
 // Panels will be sorted according of xOffset and yOffset (since all panel offsets are based from the same relative point)
+// const DUMMY_PANEL_DATA = {
+//   PanelA: {
+//     w: 0.5,
+//     h: 0.5,
+//     xOffset: 0,
+//     yOffset: 0
+//   },
+//   PanelB: {
+//     w: 0.5,
+//     h: 0.5,
+//     xOffset: 0.5,
+//     yOffset: 0
+//   }
+// }
 const DUMMY_PANEL_DATA = {
-  PanelA: {
-    w: 0.5,
-    h: 0.5,
-    xOffset: 0,
-    yOffset: 0
+  data : {
+    A: { w: 0.5, h: 1.0 },
+    B: { w: 0.5, h: 1.0 }
   },
-  PanelB: {
-    w: 0.5,
-    h: 0.5,
-    xOffset: 0.5,
-    yOffset: 0
-  }
+  // embedding order into list (first node is top left panel)
+  adjList: [
+    { A: { horiz: ['B'], vert: []}},
+    { B : { horiz: ['A'], vert: []}}
+  ]
 }
 
 const PanelA = () => (<div style={{background: 'blue', display: 'flex', width: '100%', height: '100%'}}>Panel A</div>)
@@ -38,9 +51,17 @@ function App() {
 
   const onRangeChange = (name, event) => {
     const targetName = event.target.name
+    const currentPercent = panelData.data[name][targetName]
     const nextPercent = parseInt(event.target.value) / 100
-    const nextPanelData = Object.assign({}, panelData)
-    nextPanelData[name][targetName] = nextPercent
+    const percentChange = Math.floor((nextPercent - currentPercent) * 100) / 100
+    const changeEvent = {
+      nodeId: name,
+      data: {
+        w: targetName === 'w' ? percentChange : 0,
+        h: targetName === 'h' ? percentChange : 0
+      }
+    }
+    const nextPanelData = updateGraph(cloneDeep(panelData), changeEvent)
     setPanelData(nextPanelData)
   }
   return (
@@ -57,29 +78,27 @@ function App() {
         }}
       >
         <b>Panel A</b>
-        <label>
-          height (0 - 1) {Math.round(panelData['PanelA'].h * 100)}%
-          <input type='range' min={0} max={100} name='h' value={panelData['PanelA'].h * 100} onChange={event => onRangeChange('PanelA', event)} />
-          <br/>
-          width (0 - 1) {Math.round(panelData['PanelA'].w * 100)}%
-          <input type='range' min={0} max={100} name='w' value={panelData['PanelA'].w * 100} onChange={event => onRangeChange('PanelA', event)} />
-        </label>
+        <div>height (0 - 1) {Math.round(panelData.data['A'].h * 100)}%</div>
+        <input type='range' min={0} max={100} name='h' value={panelData.data['A'].h * 100} onChange={event => onRangeChange('A', event)} />
+        width (0 - 1) {Math.round(panelData.data['A'].w * 100)}%
+        <input type='range' min={0} max={100} name='w' value={panelData.data['A'].w * 100} onChange={event => onRangeChange('A', event)} />
+        <br/>
         <b>Panel B</b>
-        <label>
-          height (0 - 1) {Math.round(panelData['PanelB'].h * 100)}%
-          <input type='range' min={0} max={100} name='h' value={panelData['PanelB'].h * 100} onChange={event => onRangeChange('PanelB', event)} />
-          <br/>
-          width (0 - 1) {Math.round(panelData['PanelB'].w * 100)}%
-          <input type='range' min={0} max={100} name='w' value={panelData['PanelB'].w * 100} onChange={event => onRangeChange('PanelB', event)} />
-        </label>
+        <div>height (0 - 1) {Math.round(panelData.data['B'].h * 100)}%</div>
+        <input type='range' min={0} max={100} name='h' value={panelData.data['B'].h * 100} onChange={event => onRangeChange('B', event)} />
+        <div>width (0 - 1) {Math.round(panelData.data['B'].w * 100)}%</div>
+        <input type='range' min={0} max={100} name='w' value={panelData.data['B'].w * 100} onChange={event => onRangeChange('B', event)} />
       </div>
       <div ref={containerRef} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
-        <PanelManager
+        <pre>
+          {JSON.stringify(panelData, null, 2)}
+        </pre>
+        {/* <PanelManager
           containerRef={containerRef}
           panelComponents={[PanelA, PanelB]}
           panelData={panelData}
 
-        />
+        /> */}
       </div>
     </div>
   );
