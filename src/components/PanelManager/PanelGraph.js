@@ -103,6 +103,8 @@ const ORIGINAL_GRAPH_2 = {
   ]
 }
 
+// NOTE: assumes an edge relationship (vert or horiz) is then entire vertical edge, or the entire horizontal edge (that sums to 100%)
+// to enforce congruent panes, or else relationships between nodes will dynamically change beyond adding and removing a node
 // CHANGE EVENT:
 // (-0.2, 0)
 
@@ -119,6 +121,7 @@ const MINIMUM_DIMENSION = 0.10
 // updateGraph does not consider the special cases of adding a node or removing a node
 // it assumes the graph structure is static, and only handles updating of node relationships
 // TODO: consider minimum dimensions - "width or height of panel cannot be lower than 10%"
+// FIXME: consider rework of update based on relationship
 export const updateGraph = ( origGraph, changeEvent) => {
   // console.log('updateGraph', JSON.stringify(origGraph, null, 2), {changeEvent })
   const { nodeId, data } = changeEvent
@@ -135,10 +138,15 @@ export const updateGraph = ( origGraph, changeEvent) => {
   // if (nextGraph.data[nodeId].h < MINIMUM_DIMENSION)
   // next, find and update the related nodes from the changed node
   
+  // horizontal means opposingly horizontal
   const horizRelatedNodes = nextGraph.adjList.find( node => 
     Object.keys(node)[0] === nodeId )[nodeId].horiz || []
+  const adjHorizRelatedNodes = nextGraph.adjList.find( node => 
+    Object.keys(node)[0] === nodeId )[nodeId].adjHoriz || []
   const vertRelatedNodes = nextGraph.adjList.find( node =>
     Object.keys(node)[0] === nodeId )[nodeId].vert || []
+  const adjVertRelatedNodes = nextGraph.adjList.find( node =>
+    Object.keys(node)[0] === nodeId )[nodeId].adjVert || []
   // console.log({horizRelatedNodes, vertRelatedNodes})
   // if the change node width did not change, then the horizontally related node widths will not change
   if (horizRelatedNodes.length ) {
@@ -146,9 +154,19 @@ export const updateGraph = ( origGraph, changeEvent) => {
     // if the change node width decreased, then the horizontally related node widths will increase
     horizRelatedNodes.forEach(relatedNodeId => {
       nextGraph.data[relatedNodeId].w = nextGraph.data[relatedNodeId].w - data.w
-      if (vertRelatedNodes.includes(relatedNodeId)) {
-        nextGraph.data[relatedNodeId].h = nextGraph.data[relatedNodeId].h + data.h
-      }
+      // if (vertRelatedNodes.includes(relatedNodeId)) {
+      //   nextGraph.data[relatedNodeId].h = nextGraph.data[relatedNodeId].h + data.h
+      // }
+    })
+  }
+  if (adjVertRelatedNodes.length) {
+    adjVertRelatedNodes.forEach(relatedNodeId => {
+      nextGraph.data[relatedNodeId].h = nextGraph.data[relatedNodeId].h + data.h
+    })
+  }
+  if (adjHorizRelatedNodes.length) {
+    adjHorizRelatedNodes.forEach(relatedNodeId => {
+      nextGraph.data[relatedNodeId].w = nextGraph.data[relatedNodeId].w + data.w
     })
   }
   // if the change node width did not change, then the vertically related node widths will not change
@@ -157,9 +175,9 @@ export const updateGraph = ( origGraph, changeEvent) => {
     // if the change node width decreased, then the vertically related node widths will increase
     vertRelatedNodes.forEach(relatedNodeId => {
       nextGraph.data[relatedNodeId].h = nextGraph.data[relatedNodeId].h - data.h
-      if (vertRelatedNodes.includes(relatedNodeId)) {
-        nextGraph.data[relatedNodeId].w = nextGraph.data[relatedNodeId].w + data.w
-      }
+      // if (vertRelatedNodes.includes(relatedNodeId)) {
+      //   nextGraph.data[relatedNodeId].w = nextGraph.data[relatedNodeId].w + data.w
+      // }
     })
   }
   // console.log('after update', JSON.stringify(nextGraph, null, 2))
