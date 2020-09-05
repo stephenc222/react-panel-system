@@ -40,10 +40,10 @@ const DUMMY_PANEL_DATA = {
   // embedding order into list (first node is top left panel)
   // FIXME: these relationships may be missing something... maybe...
   adjList: [
-    { A: { horiz: ['B', 'C'], adjHoriz: ['D'], vert: ['D', 'C'], adjVert: ['B'] } },
-    { B: { horiz: ['A', 'D'], adjHoriz: ['C'], vert: ['C', 'D'], adjVert: ['A'] } },
-    { D: { horiz: ['C', 'B'], adjHoriz: ['A'], vert: ['A', 'B'], adjVert: ['C'] } },
-    { C: { horiz: ['D', 'A'], adjHoriz: ['B'], vert: ['B', 'A'], adjVert: ['D'] } },
+    { A: { horiz: ['B', ], adjHoriz: [], vert: ['D', 'C'], adjVert: ['B'] } },
+    { B: { horiz: ['A', ], adjHoriz: [], vert: ['C', 'D'], adjVert: ['A'] } },
+    { D: { horiz: ['C', ], adjHoriz: [], vert: ['A', 'B'], adjVert: ['C'] } },
+    { C: { horiz: ['D', ], adjHoriz: [], vert: ['B', 'A'], adjVert: ['D'] } },
   ]
 }
 

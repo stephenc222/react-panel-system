@@ -138,13 +138,16 @@ export const updateGraph = ( origGraph, changeEvent) => {
   // if (nextGraph.data[nodeId].h < MINIMUM_DIMENSION)
   // next, find and update the related nodes from the changed node
   
-  // horizontal means opposingly horizontal
+  // horizontal means opposingly horizontal of a shared horizontal edge
   const horizRelatedNodes = nextGraph.adjList.find( node => 
     Object.keys(node)[0] === nodeId )[nodeId].horiz || []
+  // adjacent horizontal means being on the same side of a shared horizontal edge
   const adjHorizRelatedNodes = nextGraph.adjList.find( node => 
     Object.keys(node)[0] === nodeId )[nodeId].adjHoriz || []
+  // vertical means being on the opposite side of a shared horizontal edge
   const vertRelatedNodes = nextGraph.adjList.find( node =>
     Object.keys(node)[0] === nodeId )[nodeId].vert || []
+  // adjacent vertical means being on the same side of a shared horizontal edge
   const adjVertRelatedNodes = nextGraph.adjList.find( node =>
     Object.keys(node)[0] === nodeId )[nodeId].adjVert || []
   // console.log({horizRelatedNodes, vertRelatedNodes})
