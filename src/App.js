@@ -42,8 +42,8 @@ const DUMMY_PANEL_DATA = {
   adjList: [
     { A: { horiz: ['B', ], adjHoriz: [], vert: ['D', 'C'], adjVert: ['B'] } },
     { B: { horiz: ['A', ], adjHoriz: [], vert: ['C', 'D'], adjVert: ['A'] } },
-    { D: { horiz: ['C', ], adjHoriz: [], vert: ['A', 'B'], adjVert: ['C'] } },
     { C: { horiz: ['D', ], adjHoriz: [], vert: ['B', 'A'], adjVert: ['D'] } },
+    { D: { horiz: ['C', ], adjHoriz: [], vert: ['A', 'B'], adjVert: ['C'] } },
   ]
 }
 
@@ -51,6 +51,22 @@ const PanelA = () => (<div style={{background: '#C23B23', display: 'flex', width
 const PanelB = () => (<div style={{background: '#03C03C', display: 'flex', width: '100%', height: '100%'}}>Panel B</div>)
 const PanelC = () => (<div style={{background: '#579ABE', display: 'flex', width: '100%', height: '100%'}}>Panel C</div>)
 const PanelD = () => (<div style={{background: '#976ED7', display: 'flex', width: '100%', height: '100%'}}>Panel D</div>)
+
+const PanelManagerTestInputs = ({panelData, onRangeChange}) => {
+  const panelIds = Object.keys(panelData.data)
+  return panelIds.map( panelId  => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column'}} key={`panel_input_${panelId}`}>
+        <b>Panel {panelId}</b>
+        <div>height (0 - 1) {Math.round(panelData.data[panelId].h * 100)}%</div>
+        <input type='range' min={0} max={100} name='h' value={panelData.data[panelId].h * 100} onChange={event => onRangeChange(panelId, event)} />
+        width (0 - 1) {Math.round(panelData.data[panelId].w * 100)}%
+        <input type='range' min={0} max={100} name='w' value={panelData.data[panelId].w * 100} onChange={event => onRangeChange(panelId, event)} />
+        <br/>
+      </div>
+    )
+  })
+}
 
 function App() {
   const containerRef = useRef(null)
@@ -73,6 +89,7 @@ function App() {
   }
   return (
     <div className="App">
+      <div style={{display: 'flex', flexDirection: 'row'}}>
       <div
         style={{
           display: 'flex',
@@ -84,29 +101,9 @@ function App() {
           textAlign: 'left'
         }}
       >
-        <b>Panel A</b>
-        <div>height (0 - 1) {Math.round(panelData.data['A'].h * 100)}%</div>
-        <input type='range' min={0} max={100} name='h' value={panelData.data['A'].h * 100} onChange={event => onRangeChange('A', event)} />
-        width (0 - 1) {Math.round(panelData.data['A'].w * 100)}%
-        <input type='range' min={0} max={100} name='w' value={panelData.data['A'].w * 100} onChange={event => onRangeChange('A', event)} />
+        <span style={{fontSize: 18, fontWeight: 'bold'}}>Example #1</span>
         <br/>
-        <b>Panel B</b>
-        <div>height (0 - 1) {Math.round(panelData.data['B'].h * 100)}%</div>
-        <input type='range' min={0} max={100} name='h' value={panelData.data['B'].h * 100} onChange={event => onRangeChange('B', event)} />
-        <div>width (0 - 1) {Math.round(panelData.data['B'].w * 100)}%</div>
-        <input type='range' min={0} max={100} name='w' value={panelData.data['B'].w * 100} onChange={event => onRangeChange('B', event)} />
-        <br/>
-        <b>Panel C</b>
-        <div>height (0 - 1) {Math.round(panelData.data['C'].h * 100)}%</div>
-        <input type='range' min={0} max={100} name='h' value={panelData.data['C'].h * 100} onChange={event => onRangeChange('C', event)} />
-        <div>width (0 - 1) {Math.round(panelData.data['C'].w * 100)}%</div>
-        <input type='range' min={0} max={100} name='w' value={panelData.data['C'].w * 100} onChange={event => onRangeChange('C', event)} />
-        <br/>
-        <b>Panel D</b>
-        <div>height (0 - 1) {Math.round(panelData.data['D'].h * 100)}%</div>
-        <input type='range' min={0} max={100} name='h' value={panelData.data['D'].h * 100} onChange={event => onRangeChange('D', event)} />
-        <div>width (0 - 1) {Math.round(panelData.data['D'].w * 100)}%</div>
-        <input type='range' min={0} max={100} name='w' value={panelData.data['D'].w * 100} onChange={event => onRangeChange('D', event)} />
+        <PanelManagerTestInputs onRangeChange={onRangeChange} panelData={panelData} />
       </div>
       <div ref={containerRef} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
         {/* <pre>
@@ -122,6 +119,7 @@ function App() {
           ]}
           panelData={panelData}
         />
+      </div>
       </div>
     </div>
   );
