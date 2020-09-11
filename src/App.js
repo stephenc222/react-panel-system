@@ -30,12 +30,30 @@ import './App.css';
 //     yOffset: 0
 //   }
 // }
-const DUMMY_PANEL_DATA = {
+const DUMMY_PANEL_DATA_0 = {
   data : {
-    A: { w: 0.5, h: 0.5 },
-    B: { w: 0.5, h: 0.5 },
-    C: { w: 0.5, h: 0.5 },
-    D: { w: 0.5, h: 0.5 }
+    A: { w: 0.25, h: 0.5, x: 0, y: 0 },
+    B: { w: 0.5, h: 1.0, x: 0.25, y: 0},
+    C: { w: 0.25, h: 0.5, x: 0.75, y: 0.0 },
+    D: { w: 0.25, h: 0.5, x: 0, y: 0.5 },
+    E: { w: 0.25, h: 0.5, x: 0.75, y: 0.5 },
+  },
+  // embedding order into list (first node is top left panel)
+  // FIXME: these relationships may be missing something... maybe...
+  adjList: [
+    { A: { horiz: ['B', ], adjHoriz: ['D'], vert: ['D'], adjVert: [] } },
+    { B: { horiz: ['A','C', 'D', 'E'], adjHoriz: [], vert: [], adjVert: ['A'] } },
+    { C: { horiz: ['B' ], adjHoriz: ['E'], vert: ['E'], adjVert: [] } },
+    { D: { horiz: ['B', ], adjHoriz: ['A'], vert: ['A'], adjVert: [] } },
+    { E: { horiz: ['B', ], adjHoriz: ['C'], vert: ['C'], adjVert: [] } },
+  ]
+}
+const DUMMY_PANEL_DATA_1 = {
+  data : {
+    A: { w: 0.5, h: 0.5, x: 0, y: 0 },
+    B: { w: 0.5, h: 0.5, x: 0.5, y: 0},
+    C: { w: 0.5, h: 0.5, x: 0, y: 0.5 },
+    D: { w: 0.5, h: 0.5, x: 0.5, y: 0.5 }
   },
   // embedding order into list (first node is top left panel)
   // FIXME: these relationships may be missing something... maybe...
@@ -47,10 +65,13 @@ const DUMMY_PANEL_DATA = {
   ]
 }
 
-const PanelA = () => (<div style={{background: '#C23B23', display: 'flex', width: '100%', height: '100%'}}>Panel A</div>)
-const PanelB = () => (<div style={{background: '#03C03C', display: 'flex', width: '100%', height: '100%'}}>Panel B</div>)
-const PanelC = () => (<div style={{background: '#579ABE', display: 'flex', width: '100%', height: '100%'}}>Panel C</div>)
-const PanelD = () => (<div style={{background: '#976ED7', display: 'flex', width: '100%', height: '100%'}}>Panel D</div>)
+// TODO: test with much, much more complex panel arrangements
+
+const PanelA = () => (<div style={{background: '#C23B23', display: 'flex', flexGrow: 1}}>Panel A</div>)
+const PanelB = () => (<div style={{background: '#03C03C', display: 'flex', flexGrow: 1}}>Panel B</div>)
+const PanelC = () => (<div style={{background: '#579ABE', display: 'flex', flexGrow: 1}}>Panel C</div>)
+const PanelD = () => (<div style={{background: '#976ED7', display: 'flex', flexGrow: 1}}>Panel D</div>)
+const PanelE = () => (<div style={{background: '#F39A27', display: 'flex', flexGrow: 1}}>Panel E</div>)
 
 const PanelManagerTestInputs = ({panelData, onRangeChange}) => {
   const panelIds = Object.keys(panelData.data)
@@ -69,10 +90,12 @@ const PanelManagerTestInputs = ({panelData, onRangeChange}) => {
 }
 
 function App() {
-  const containerRef = useRef(null)
-  const [panelData, setPanelData] = useState(DUMMY_PANEL_DATA)
+  const containerRef0 = useRef(null)
+  const containerRef1 = useRef(null)
+  const [panelData0, setPanelData0] = useState(DUMMY_PANEL_DATA_0)
+  const [panelData1, setPanelData1] = useState(DUMMY_PANEL_DATA_1)
 
-  const onRangeChange = (name, event) => {
+  const onRangeChange = (name, event, panelData, setPanelData) => {
     const targetName = event.target.name
     const currentPercent = panelData.data[name][targetName]
     const nextPercent = parseInt(event.target.value) / 100
@@ -89,7 +112,7 @@ function App() {
   }
   return (
     <div className="App">
-      <div style={{display: 'flex', flexDirection: 'row'}}>
+      <div style={{display: 'flex', flexDirection: 'row', padding: '1em'}}>
       <div
         style={{
           display: 'flex',
@@ -103,21 +126,54 @@ function App() {
       >
         <span style={{fontSize: 18, fontWeight: 'bold'}}>Example #1</span>
         <br/>
-        <PanelManagerTestInputs onRangeChange={onRangeChange} panelData={panelData} />
+        <PanelManagerTestInputs onRangeChange={(name, event) => onRangeChange(name, event, panelData0, setPanelData0 )} panelData={panelData0} />
       </div>
-      <div ref={containerRef} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
+      <div ref={containerRef0} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
         {/* <pre>
           {JSON.stringify(panelData, null, 2)}
         </pre> */}
         <PanelManager
-          containerRef={containerRef}
+          containerRef={containerRef0}
+          panelComponents={[
+            {id: 'A', PanelComponent: PanelA},
+            {id: 'B', PanelComponent: PanelB},
+            {id: 'C', PanelComponent: PanelC},
+            {id: 'D', PanelComponent: PanelD},
+            {id: 'E', PanelComponent: PanelE},
+          ]}
+          panelData={panelData0}
+        />
+      </div>
+      </div>
+      <div style={{display: 'flex', flexDirection: 'row', padding: '1em'}}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          border: '1px solid lightgrey',
+          maxWidth: 500,
+          alignContent: 'left',
+          padding: '1em',
+          textAlign: 'left'
+        }}
+      >
+        <span style={{fontSize: 18, fontWeight: 'bold'}}>Example #2</span>
+        <br/>
+        <PanelManagerTestInputs onRangeChange={(name, event) => onRangeChange(name, event, panelData1, setPanelData1 )} panelData={panelData1} />
+      </div>
+      <div ref={containerRef1} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
+        {/* <pre>
+          {JSON.stringify(panelData, null, 2)}
+        </pre> */}
+        <PanelManager
+          containerRef={containerRef1}
           panelComponents={[
             {id: 'A', PanelComponent: PanelA},
             {id: 'B', PanelComponent: PanelB},
             {id: 'C', PanelComponent: PanelC},
             {id: 'D', PanelComponent: PanelD},
           ]}
-          panelData={panelData}
+          panelData={panelData1}
         />
       </div>
       </div>

@@ -54,7 +54,6 @@ const ORIGINAL_GRAPH = {
  * |         |         |
  * ---------------------
  */ 
-// ORIGINAL GRAPH 1:
 const ORIGINAL_GRAPH_1 = {
   data : {
     A: { w: 0.5, h: 0.5 },
@@ -83,7 +82,7 @@ const ORIGINAL_GRAPH_1 = {
  * |         |         |
  * |    A    |    B    |
  * |---------|---------|
- * |    D    |    C    |
+ * |    C    |    D    |
  * |         |         |
  * ---------------------
  */ 
@@ -117,10 +116,19 @@ const CHANGE_EVENT_1 = { nodeId: 'A', data: { w: 0.0, h: -0.2 }}
 // (0.3, 1.0)  (0.7, 1)
 
 
+// TODO: every node needs 4 types of edges (possible) to any other node
+// these changes imply how the w and h need to change, and the corresponding affect on 
+// x and y (origin of node placement):
+// 1. top vertical - means it's y coordinate changes in correspondence to change event
+// 2. bottom vertical - means it's y coordinate does not change in correspondence to change event
+// 3. left edge - means it's x coordinate changes in correspondence to change event
+// 4. right edge - means it's x coordinate does not change in correspondence to change event
+
 const MINIMUM_DIMENSION = 0.10
 // updateGraph does not consider the special cases of adding a node or removing a node
 // it assumes the graph structure is static, and only handles updating of node relationships
 // TODO: consider minimum dimensions - "width or height of panel cannot be lower than 10%"
+// to enable "docking"
 // FIXME: consider rework of update based on relationship
 export const updateGraph = ( origGraph, changeEvent) => {
   // console.log('updateGraph', JSON.stringify(origGraph, null, 2), {changeEvent })
@@ -134,6 +142,12 @@ export const updateGraph = ( origGraph, changeEvent) => {
   }
   if (nextGraph.data[nodeId].h !== 1) {
     nextGraph.data[nodeId].h = nodeData.h + data.h <= 1 ? nodeData.h + data.h : nodeData.h
+  }
+  if (nodeData.y !== 0) {
+    nextGraph.data[nodeId].y = nodeData.y - data.h
+  }
+  if (nodeData.x !== 0) {
+    nextGraph.data[nodeId].x = nodeData.x - data.w
   }
   // if (nextGraph.data[nodeId].h < MINIMUM_DIMENSION)
   // next, find and update the related nodes from the changed node
@@ -157,6 +171,9 @@ export const updateGraph = ( origGraph, changeEvent) => {
     // if the change node width decreased, then the horizontally related node widths will increase
     horizRelatedNodes.forEach(relatedNodeId => {
       nextGraph.data[relatedNodeId].w = nextGraph.data[relatedNodeId].w - data.w
+      if (nextGraph.data[relatedNodeId].x !== 0) {
+        nextGraph.data[relatedNodeId].x = nextGraph.data[relatedNodeId].x + data.w
+      }
       // if (vertRelatedNodes.includes(relatedNodeId)) {
       //   nextGraph.data[relatedNodeId].h = nextGraph.data[relatedNodeId].h + data.h
       // }
@@ -165,11 +182,15 @@ export const updateGraph = ( origGraph, changeEvent) => {
   if (adjVertRelatedNodes.length) {
     adjVertRelatedNodes.forEach(relatedNodeId => {
       nextGraph.data[relatedNodeId].h = nextGraph.data[relatedNodeId].h + data.h
+      if (nextGraph.data[relatedNodeId].y !== 0) {
+        nextGraph.data[relatedNodeId].y = nextGraph.data[relatedNodeId].y - data.h
+      }
     })
   }
   if (adjHorizRelatedNodes.length) {
     adjHorizRelatedNodes.forEach(relatedNodeId => {
       nextGraph.data[relatedNodeId].w = nextGraph.data[relatedNodeId].w + data.w
+      // nextGraph.data[relatedNodeId].x = nextGraph.data[relatedNodeId].x - data.w
     })
   }
   // if the change node width did not change, then the vertically related node widths will not change
@@ -178,19 +199,14 @@ export const updateGraph = ( origGraph, changeEvent) => {
     // if the change node width decreased, then the vertically related node widths will increase
     vertRelatedNodes.forEach(relatedNodeId => {
       nextGraph.data[relatedNodeId].h = nextGraph.data[relatedNodeId].h - data.h
+      // FIXME: handle offsets for nodes "several panels down" 
+      if (nextGraph.data[relatedNodeId].y !== 0) {
+        nextGraph.data[relatedNodeId].y = nextGraph.data[relatedNodeId].y + data.h
+      }
       // if (vertRelatedNodes.includes(relatedNodeId)) {
       //   nextGraph.data[relatedNodeId].w = nextGraph.data[relatedNodeId].w + data.w
       // }
     })
   }
-  // console.log('after update', JSON.stringify(nextGraph, null, 2))
   return nextGraph
-
 }
-
-// console.log('--------------------------------- EXAMPLE 0 -----------------------')
-// updateGraph(ORIGINAL_GRAPH, CHANGE_EVENT)
-// console.log('--------------------------------- EXAMPLE 1 -----------------------')
-// updateGraph(ORIGINAL_GRAPH_1, CHANGE_EVENT_1)
-// console.log('--------------------------------- EXAMPLE 2 -----------------------')
-// updateGraph(ORIGINAL_GRAPH_2, CHANGE_EVENT_1)

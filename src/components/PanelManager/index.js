@@ -1,26 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Panel from '../Panel'
 
-// for vertically related nodes
-const VerticalContainer = ({ children }) => {
-  return (
-    <div style={{ border: '1px solid blue', margin: -1, display: 'flex', flexDirection: 'column'}}>
-      {children}
-    </div>
-  )
-}
-
-// for horizontally related nodes
-const HorizontalContainer = ({ children }) => {
-  return (
-    <div style={{ border: '1px solid green', margin: -1, display: 'flex', flexDirection: 'row'}}>
-      {children}
-    </div>
-  )
-}
-
-// called once in correct container
-
 const PanelManager = ({ containerRef, panelComponents, panelData}) => {
 
   const [mounted, setMounted] = useState(false)
@@ -44,15 +24,8 @@ const PanelManager = ({ containerRef, panelComponents, panelData}) => {
     return null
   }
   const { width, height, x, y } = containerRef.current.getBoundingClientRect() 
-  // TODO: now, there's a rendering problem, here's the first thought to solve it:
-  // horizontally related nodes belong in the same horizontal container, and vertically related 
-  // nodes belong in the same vertical container
-  // naturally, these containers will contain other containers of nodes. Ideally, if the relationship
-  // between components is perserved within the corresponding vertical or horizontal container, 
-  // then overlapping containers becomes a non-issue
-  // NOTE: an underlying assumption, if a node width is less than 1, must have a horizontal relation to another node(s) that equal 1 in total
   return (
-    <div style={{display: 'flex', flexWrap: 'wrap', background: 'yellow', height: '100%', width: '100%'}}>
+    <div style={{display: 'flex', position: 'relative', background: 'yellow', height: '100%', width: '100%'}}>
       {
         panelData.adjList.map(panelNode => {
           console.log({panelNode})
