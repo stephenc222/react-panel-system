@@ -28,14 +28,12 @@ const PanelManager = ({ containerRef, panelComponents, panelData}) => {
     <div style={{display: 'flex', position: 'relative', background: 'yellow', height: '100%', width: '100%'}}>
       {
         panelData.adjList.map(panelNode => {
-          console.log({panelNode})
           return renderPanel(panelNode)
         })
       }
       {/* {
         panelComponents.map( ({id, PanelComponent}) => {
           const {w, h, yOffset, xOffset } = panelData[PanelComponent.name] 
-          console.log({ w, h, yOffset, xOffset, width, height,x,  y})
           return (
             <Panel
               onPanelSizeChange={data => onPanelSizeChange(data, PanelComponent.name)}

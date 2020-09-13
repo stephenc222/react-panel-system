@@ -4,6 +4,28 @@ import PanelManager from './components/PanelManager'
 import {updateGraph} from './components/PanelManager/PanelGraph'
 import './App.css';
 
+const Switch = ({ isOn, handleToggle, id }) => {
+  return (
+    <>
+      <input
+        checked={isOn}
+        onChange={() => handleToggle(!isOn)}
+        className="react-switch-checkbox"
+        id={`react-switch-new-${id}`}
+        type="checkbox"
+      />
+      <label
+        className="react-switch-label"
+        htmlFor={`react-switch-new-${id}`}
+      >
+        <span className={`react-switch-button`} />
+      </label>
+    </>
+  );
+};
+
+
+
 /**
  * data object passed to PanelManager has following structure (per panel)
  * id: {
@@ -41,11 +63,11 @@ const DUMMY_PANEL_DATA_0 = {
   // embedding order into list (first node is top left panel)
   // FIXME: these relationships may be missing something... maybe...
   adjList: [
-    { A: { horiz: ['B', ], adjHoriz: ['D'], vert: ['D'], adjVert: [] } },
-    { B: { horiz: ['A','C', 'D', 'E'], adjHoriz: [], vert: [], adjVert: ['A'] } },
-    { C: { horiz: ['B' ], adjHoriz: ['E'], vert: ['E'], adjVert: [] } },
-    { D: { horiz: ['B', ], adjHoriz: ['A'], vert: ['A'], adjVert: [] } },
-    { E: { horiz: ['B', ], adjHoriz: ['C'], vert: ['C'], adjVert: [] } },
+    { A: { re: ['B', 'D'], le: [], tv: [], bv: ['D'] } },
+    { B: { re: ['C', 'E'], le: ['A', 'D'], tv: [], bv: [] } },
+    { C: { re: [], le: ['B', 'E'], tv: [], bv: ['E'] } },
+    { D: { re: ['B', 'A'], le: [], tv: ['A'], bv: [] } },
+    { E: { re: [], le: ['B', 'C'], tv: ['C'], bv: [] } },
   ]
 }
 const DUMMY_PANEL_DATA_1 = {
@@ -58,10 +80,10 @@ const DUMMY_PANEL_DATA_1 = {
   // embedding order into list (first node is top left panel)
   // FIXME: these relationships may be missing something... maybe...
   adjList: [
-    { A: { horiz: ['B', ], adjHoriz: [], vert: ['D', 'C'], adjVert: ['B'] } },
-    { B: { horiz: ['A', ], adjHoriz: [], vert: ['C', 'D'], adjVert: ['A'] } },
-    { C: { horiz: ['D', ], adjHoriz: [], vert: ['B', 'A'], adjVert: ['D'] } },
-    { D: { horiz: ['C', ], adjHoriz: [], vert: ['A', 'B'], adjVert: ['C'] } },
+    { A: { re: ['B','C', 'D' ], le: [], tv: [], bv: ['C' ] } },
+    { B: { le: ['A', 'C', 'D' ], re: [], tv: [], bv: ['D'] } },
+    { C: { re: ['D','B', 'A' ], le: [], tv: ['A'], bv: [] } },
+    { D: { le: ['B','C', 'A' ], re: [], tv: ['B'], bv: [] } },
   ]
 }
 
@@ -73,19 +95,41 @@ const PanelC = () => (<div style={{background: '#579ABE', display: 'flex', flexG
 const PanelD = () => (<div style={{background: '#976ED7', display: 'flex', flexGrow: 1}}>Panel D</div>)
 const PanelE = () => (<div style={{background: '#F39A27', display: 'flex', flexGrow: 1}}>Panel E</div>)
 
-const PanelManagerTestInputs = ({panelData, onRangeChange}) => {
-  const panelIds = Object.keys(panelData.data)
-  return panelIds.map( panelId  => {
+const SinglePanelManagerTestInput = ({ panelId, panelData, onRangeChange, index, id}) => {
+    const [isTop, setIsTop] = useState(false)
+    const [isLeft, setIsLeft] = useState(false)
     return (
-      <div style={{ display: 'flex', flexDirection: 'column'}} key={`panel_input_${panelId}`}>
+      <>
         <b>Panel {panelId}</b>
-        <div>height (0 - 1) {Math.round(panelData.data[panelId].h * 100)}%</div>
-        <input type='range' min={0} max={100} name='h' value={panelData.data[panelId].h * 100} onChange={event => onRangeChange(panelId, event)} />
-        width (0 - 1) {Math.round(panelData.data[panelId].w * 100)}%
-        <input type='range' min={0} max={100} name='w' value={panelData.data[panelId].w * 100} onChange={event => onRangeChange(panelId, event)} />
-        <br/>
+        <div>x: {Math.floor(panelData.data[panelId].x * 100)}% y: {Math.floor(panelData.data[panelId].y * 100)}%</div>
+      <div style={{ display: 'flex', flexDirection: 'row'}} key={`panel_input_${panelId}`}>
+        <div style={{flexDirection: 'column', display: 'flex', padding: '0.5em'}}>
+          <div>From Edge:</div>
+          <div style={{display: 'flex', padding: '0.5em'}}>
+          TV <Switch id={`top-${index}-${id}`} isOn={isTop} handleToggle={setIsTop}/>&nbsp;BV
+          </div>
+          <div>height (0 - 1) {Math.round(panelData.data[panelId].h * 100)}%</div>
+          <input type='range' min={0} max={100} name='h' value={panelData.data[panelId].h * 100} onChange={event => onRangeChange(panelId, event, isTop ? 'BV' : 'TV')} />
+        </div>
+        <div style={{flexDirection: 'column', display: 'flex', padding: '0.5em'}}>
+          <div>From Edge:</div>
+          <div style={{display: 'flex', padding: '0.5em'}}>
+          LE <Switch isOn={isLeft} id={`left-${index}-${id}`} handleToggle={setIsLeft}/>&nbsp;RE
+          </div>
+          width (0 - 1) {Math.round(panelData.data[panelId].w * 100)}%
+          <input type='range' min={0} max={100} name='w' value={panelData.data[panelId].w * 100} onChange={event => onRangeChange(panelId, event, isLeft ? 'RE' : 'LE')} />
+          <br/>
+        </div>
       </div>
+      </>
     )
+}
+
+const PanelManagerTestInputs = ({panelData, onRangeChange, id = ''}) => {
+  const panelIds = Object.keys(panelData.data)
+
+  return panelIds.map( (panelId, index)  => {
+    return <SinglePanelManagerTestInput index={index} id={id} panelData={panelData} onRangeChange={onRangeChange} panelId={panelId} />
   })
 }
 
@@ -95,13 +139,15 @@ function App() {
   const [panelData0, setPanelData0] = useState(DUMMY_PANEL_DATA_0)
   const [panelData1, setPanelData1] = useState(DUMMY_PANEL_DATA_1)
 
-  const onRangeChange = (name, event, panelData, setPanelData) => {
+  const onRangeChange = (name, event, panelData, setPanelData, edgeType) => {
     const targetName = event.target.name
     const currentPercent = panelData.data[name][targetName]
     const nextPercent = parseInt(event.target.value) / 100
     const percentChange = Math.floor((nextPercent - currentPercent) * 100) / 100
+    // this will be dispatched from a panel drag event, in one single object
     const changeEvent = {
       nodeId: name,
+      edgeType,
       data: {
         w: targetName === 'w' ? percentChange : 0,
         h: targetName === 'h' ? percentChange : 0
@@ -118,20 +164,17 @@ function App() {
           display: 'flex',
           flexDirection: 'column',
           border: '1px solid lightgrey',
-          maxWidth: 500,
+          width: 310,
           alignContent: 'left',
-          padding: '1em',
+          padding: '0.5em',
           textAlign: 'left'
         }}
       >
         <span style={{fontSize: 18, fontWeight: 'bold'}}>Example #1</span>
         <br/>
-        <PanelManagerTestInputs onRangeChange={(name, event) => onRangeChange(name, event, panelData0, setPanelData0 )} panelData={panelData0} />
+        <PanelManagerTestInputs onRangeChange={(name, event, edgeType) => onRangeChange(name, event, panelData0, setPanelData0, edgeType )} panelData={panelData0} />
       </div>
       <div ref={containerRef0} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
-        {/* <pre>
-          {JSON.stringify(panelData, null, 2)}
-        </pre> */}
         <PanelManager
           containerRef={containerRef0}
           panelComponents={[
@@ -151,20 +194,17 @@ function App() {
           display: 'flex',
           flexDirection: 'column',
           border: '1px solid lightgrey',
-          maxWidth: 500,
+          width: 310,
           alignContent: 'left',
-          padding: '1em',
+          padding: '0.5em',
           textAlign: 'left'
         }}
       >
         <span style={{fontSize: 18, fontWeight: 'bold'}}>Example #2</span>
         <br/>
-        <PanelManagerTestInputs onRangeChange={(name, event) => onRangeChange(name, event, panelData1, setPanelData1 )} panelData={panelData1} />
+        <PanelManagerTestInputs id='test-one' onRangeChange={(name, event, edgeType) => onRangeChange(name, event, panelData1, setPanelData1, edgeType )} panelData={panelData1} />
       </div>
       <div ref={containerRef1} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
-        {/* <pre>
-          {JSON.stringify(panelData, null, 2)}
-        </pre> */}
         <PanelManager
           containerRef={containerRef1}
           panelComponents={[
