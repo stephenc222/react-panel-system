@@ -1,0 +1,7 @@
+.panel-vertical-edge {
+  cursor: row-resize;
+}
+
+.panel-horizontal-edge {
+  cursor: col-resize;
+}
