@@ -129,7 +129,16 @@ const PanelManagerTestInputs = ({panelData, onRangeChange, id = ''}) => {
   const panelIds = Object.keys(panelData.data)
 
   return panelIds.map( (panelId, index)  => {
-    return <SinglePanelManagerTestInput index={index} id={id} panelData={panelData} onRangeChange={onRangeChange} panelId={panelId} />
+    return (
+      <SinglePanelManagerTestInput
+        key={`${panelId}_${index}`}
+        index={index}
+        id={id}
+        panelData={panelData}
+        onRangeChange={onRangeChange}
+        panelId={panelId}
+      />
+    )
   })
 }
 
