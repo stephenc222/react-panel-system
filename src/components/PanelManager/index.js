@@ -15,7 +15,7 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
   const updatePanelDataContext = (changeEvent) => {
     const nextPanelDataContext = updateGraph(panelDataContext, changeEvent)
     setPanelDataContext(nextPanelDataContext)
-    onPanelDataChange(nextPanelDataContext)
+    onPanelDataChange && onPanelDataChange(nextPanelDataContext)
   }
 
   const renderPanel = (panelNode) => {

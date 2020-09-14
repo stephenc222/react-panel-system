@@ -186,7 +186,7 @@ function App() {
       <div ref={containerRef0} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
         <PanelManager
           containerRef={containerRef0}
-          onPanelDataChange={ nextPanelData => console.log('panel data change', { nextPanelData })}
+          // onPanelDataChange={ nextPanelData => console.log('panel data change', { nextPanelData })}
           panelComponents={[
             {id: 'A', PanelComponent: PanelA},
             {id: 'B', PanelComponent: PanelB},
@@ -217,7 +217,7 @@ function App() {
       <div ref={containerRef1} style={{border: '1px solid darkblue', maxWidth: 900, minWidth: 900, minHeight: 900, maxHeight: 900}}>
         <PanelManager
           containerRef={containerRef1}
-          onPanelDataChange={ nextPanelData => console.log('panel data change', { nextPanelData })}
+          // onPanelDataChange={ nextPanelData => console.log('panel data change', { nextPanelData })}
           panelComponents={[
             {id: 'A', PanelComponent: PanelA},
             {id: 'B', PanelComponent: PanelB},

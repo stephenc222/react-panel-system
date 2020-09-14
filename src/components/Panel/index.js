@@ -29,7 +29,7 @@ const Panel = ({ w, h, x, y, children, nodeId }) => {
     event.preventDefault()
     const { startX, startY } = startPos
     if (edgeType === 'LE' || edgeType === 'RE') {
-      const changeX = getPercentChange(startX, event.pageX)
+      const changeX = edgeType === 'RE' ? getPercentChange(startX, event.pageX) : getPercentChange(event.pageX, startX)
       const changeEvent = {
         nodeId,
         edgeType,
@@ -43,7 +43,7 @@ const Panel = ({ w, h, x, y, children, nodeId }) => {
       return
     }
     if (edgeType === 'TV' || edgeType === 'BV') {
-      const changeY = getPercentChange(startY, event.pageY)
+      const changeY = edgeType === 'BV' ? getPercentChange(startY, event.pageY) : getPercentChange(event.pageY, startY)  
       const changeEvent = {
         nodeId,
         edgeType,
@@ -76,7 +76,7 @@ const Panel = ({ w, h, x, y, children, nodeId }) => {
         onDragStart={onDragStart}
         onDrag={event => onDrag(event, nodeId, 'LE')}
         className='panel-horizontal-edge'
-        style={{ border: x !== 0 ? '1px solid skyblue': 'none', display: x !== 1 ? '' : 'none'}}
+        style={{ border: x !== 0 ? '4px solid skyblue': 'none', display: x !== 1 ? '' : 'none'}}
       />
         <div
           style={{
@@ -91,7 +91,7 @@ const Panel = ({ w, h, x, y, children, nodeId }) => {
             onDragEnd={onDragEnd}
             onDrag={event => onDrag(event, nodeId, 'TV')}
             className='panel-vertical-edge'
-            style={{ border: y !== 0 ? '1px solid lime': 'none', display: y !== 0 ? '' : 'none'}}
+            style={{ border: y !== 0 ? '4px solid lime': 'none', display: y !== 0 ? '' : 'none'}}
           />
           {children}
           <div
@@ -100,7 +100,7 @@ const Panel = ({ w, h, x, y, children, nodeId }) => {
             onDragEnd={onDragEnd}
             onDrag={event => onDrag(event, nodeId, 'BV')}
             className='panel-vertical-edge'
-            style={{ border: y === 0 && y + h !== 1 ? '1px solid black': 'none', display: y === 0 && y + h !== 0 ? '' : 'none'}}
+            style={{ border: y === 0 && y + h !== 1 ? '4px solid black': 'none', display: y === 0 && y + h !== 0 ? '' : 'none'}}
           />
         </div>
       <div
@@ -108,7 +108,7 @@ const Panel = ({ w, h, x, y, children, nodeId }) => {
         onDragStart={onDragStart}
         onDrag={event => onDrag(event, nodeId, 'RE')}
         className='panel-horizontal-edge'
-        style={{ border: x + w !== 1 ? '1px solid magenta': 'none', display: x + w !== 1 ? '' : 'none'}}
+        style={{ border: x + w !== 1 ? '4px solid magenta': 'none', display: x + w !== 1 ? '' : 'none'}}
       />
     </div>
   )
