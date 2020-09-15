@@ -160,7 +160,7 @@ export const updateGraph = ( origGraph, changeEvent) => {
     if (nodeData.x > MAXIMUM_THRESHOLD) {
       return nextGraph
     }
-    if (nodeData.x < MINIMUM_THRESHOLD) {
+    if (nodeData.x - data.w < MINIMUM_THRESHOLD) {
       return nextGraph
     }
     nextGraph.data[nodeId].w = nodeData.w + data.w
