@@ -30,6 +30,9 @@ const Panel = ({ w, h, x, y, children, nodeId }) => {
     const { startX, startY } = startPos
     if (edgeType === 'LE' || edgeType === 'RE') {
       const changeX = edgeType === 'RE' ? getPercentChange(startX, event.pageX) : getPercentChange(event.pageX, startX)
+      if (isNaN(changeX) || changeX === 0) {
+        return
+      }
       const changeEvent = {
         nodeId,
         edgeType,
@@ -44,6 +47,9 @@ const Panel = ({ w, h, x, y, children, nodeId }) => {
     }
     if (edgeType === 'TV' || edgeType === 'BV') {
       const changeY = edgeType === 'BV' ? getPercentChange(startY, event.pageY) : getPercentChange(event.pageY, startY)  
+      if (isNaN(changeY) || changeY === 0) {
+        return
+      }
       const changeEvent = {
         nodeId,
         edgeType,

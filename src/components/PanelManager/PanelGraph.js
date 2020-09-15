@@ -102,7 +102,8 @@ import { cloneDeep } from 'lodash'
 //   ]
 // }
 
-// TODO: consider minimum dimensions - "width or height of panel cannot be lower than 10%"
+const MINIMUM_THRESHOLD = 0.05
+const MAXIMUM_THRESHOLD = 0.95
 // to enable "docking"
 // FIXME: consider rework of update based on relationship
 export const updateGraph = ( origGraph, changeEvent) => {
@@ -131,6 +132,9 @@ export const updateGraph = ( origGraph, changeEvent) => {
     if (nodeData.w + nodeData.x === 1) {
       return nextGraph
     }
+    if (nodeData.x + nodeData.w + data.w < MINIMUM_THRESHOLD || nodeData.x + nodeData.w + data.w > MAXIMUM_THRESHOLD) {
+      return nextGraph
+    }
     nextGraph.data[nodeId].w = nodeData.w + data.w
     reRelatedNodes.forEach( relatedNodeId => {
       if (bvRelatedNodes.find(nodeId => nodeId === relatedNodeId) || tvRelatedNodes.find(nodeId => nodeId === relatedNodeId)) {
@@ -148,6 +152,15 @@ export const updateGraph = ( origGraph, changeEvent) => {
   if (edgeType === 'LE') {
     // nextGraph.data[nodeId].x = nodeData.x + data.w
     if (nodeData.x === 0) {
+      return nextGraph
+    }
+    if (nodeData.x + nodeData.w + data.w < MINIMUM_THRESHOLD || nodeData.w + data.w > MAXIMUM_THRESHOLD) {
+      return nextGraph
+    }
+    if (nodeData.x > MAXIMUM_THRESHOLD) {
+      return nextGraph
+    }
+    if (nodeData.x < MINIMUM_THRESHOLD) {
       return nextGraph
     }
     nextGraph.data[nodeId].w = nodeData.w + data.w
@@ -173,6 +186,9 @@ export const updateGraph = ( origGraph, changeEvent) => {
     if (nextGraph.data[nodeId].y === 0) {
       return nextGraph
     }
+    if (nodeData.h + data.h < MINIMUM_THRESHOLD || nodeData.h + data.h > MAXIMUM_THRESHOLD) {
+      return nextGraph
+    }
     nextGraph.data[nodeId].y = nodeData.y - data.h
     nextGraph.data[nodeId].h = nodeData.h + data.h
     tvRelatedNodes.forEach( relatedNodeId => {
@@ -184,6 +200,9 @@ export const updateGraph = ( origGraph, changeEvent) => {
   if (edgeType === 'BV') {
     // the node in question has only height change and no offset change
     if (nextGraph.data[nodeId].y + nextGraph.data[nodeId].h === 1) {
+      return nextGraph
+    }
+    if (nodeData.y + nodeData.h + data.h < MINIMUM_THRESHOLD || nodeData.y + nodeData.h + data.h > MAXIMUM_THRESHOLD) {
       return nextGraph
     }
     nextGraph.data[nodeId].h = nodeData.h + data.h
