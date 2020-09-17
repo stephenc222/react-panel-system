@@ -2,7 +2,10 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  margin: 1em;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
 }
 
 /* "Switch" CSS because they are neat */

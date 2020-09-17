@@ -18,10 +18,8 @@ const Panel = ({ w, h, x, y, children, nodeId, }) => {
       style={{
         display: 'flex',
         position: 'absolute',
-        minWidth: `${w * 100}%`,
-        maxWidth: `${w * 100}%`,
-        minHeight: `${h * 100}%`,
-        maxHeight: `${h * 100}%`,
+        width: `${w * 100}%`,
+        height: `${h * 100}%`,
         top: `${y * 100}%`,
         left: `${x * 100}%`,
       }}>
