@@ -47,7 +47,7 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
         nodeId,
         edgeType,
         data: {
-          w: changeX,
+          w: changeX * (window.innerHeight / window.innerWidth),
           h: 0
         }
       }
@@ -65,7 +65,7 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
         edgeType,
         data: {
           w: 0,
-          h: changeY
+          h: changeY * (window.innerHeight / window.innerWidth)
         }
       }
       updatePanelDataContext(changeEvent)
@@ -77,6 +77,12 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
     setDraggingNode({})
     setStartPos({})
   }
+  useEffect(() => {
+    window.addEventListener('mouseup', onMouseUp)
+    return () => {
+      window.addEventListener('mouseup', onMouseUp)
+    }
+  }, [])
   
   return (
     <PanelSystemContext.Provider value={panelManagerContext}>
