@@ -135,6 +135,24 @@ export const updateGraph = ( origGraph, changeEvent) => {
     if (nodeData.x + nodeData.w + data.w < MINIMUM_THRESHOLD || nodeData.x + nodeData.w + data.w > MAXIMUM_THRESHOLD) {
       return nextGraph
     }
+    if (nodeData.w + data.w < MINIMUM_THRESHOLD) {
+      return nextGraph
+    }
+    const tooSmallREOnlySmallNodes = reRelatedNodes.filter( nodeId => {
+      const relatedNode = nextGraph.data[nodeId] 
+      return relatedNode.w - data.w < MINIMUM_THRESHOLD && !bvRelatedNodes.includes(nodeId) && !tvRelatedNodes.includes(nodeId)
+    })
+    if ( nextGraph.data[nodeId].w + data.w < MINIMUM_THRESHOLD || tooSmallREOnlySmallNodes.length) {
+      for (let i = 0; i < reRelatedNodes.length; ++i) {
+        const relatedNode = nextGraph.data[reRelatedNodes[i]]
+        if (relatedNode.w - data.w < MINIMUM_THRESHOLD) {
+          if (data.w > 0 && nextGraph.data[reRelatedNodes[i]].w < MINIMUM_THRESHOLD) {
+            nextGraph.data[reRelatedNodes[i]].w = relatedNode.w + data.w
+          }
+          return nextGraph
+        }
+      }
+    }
     nextGraph.data[nodeId].w = nodeData.w + data.w
     reRelatedNodes.forEach( relatedNodeId => {
       if (bvRelatedNodes.find(nodeId => nodeId === relatedNodeId) || tvRelatedNodes.find(nodeId => nodeId === relatedNodeId)) {
@@ -160,8 +178,20 @@ export const updateGraph = ( origGraph, changeEvent) => {
     if (nodeData.x > MAXIMUM_THRESHOLD) {
       return nextGraph
     }
-    if (nodeData.x - data.w < MINIMUM_THRESHOLD) {
+    if (nodeData.w + data.w < MINIMUM_THRESHOLD) {
       return nextGraph
+    }
+    const tooSmallLEOnlySmallNodes = leRelatedNodes.filter( nodeId => {
+      const relatedNode = nextGraph.data[nodeId] 
+      return relatedNode.w - data.w < MINIMUM_THRESHOLD && !bvRelatedNodes.includes(nodeId) && !tvRelatedNodes.includes(nodeId)
+    })
+    if ( nextGraph.data[nodeId].w + data.w < MINIMUM_THRESHOLD || tooSmallLEOnlySmallNodes.length) {
+      for (let i = 0; i < leRelatedNodes.length; ++i) {
+        const relatedNode = nextGraph.data[leRelatedNodes[i]]
+        if (relatedNode.w - data.w < MINIMUM_THRESHOLD) {
+          return nextGraph
+        }
+      }
     }
     nextGraph.data[nodeId].w = nodeData.w + data.w
     nextGraph.data[nodeId].x = nodeData.x - data.w 
