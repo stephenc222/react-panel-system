@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import PanelManager from './components/PanelManager'
+import { minimizePanel, maximizePanel } from './components/PanelGraph'
+import Select from './Select'
 import './App.css';
 
 const DUMMY_PANEL_DATA_0 = {
@@ -42,8 +44,23 @@ const PanelD = () => (<div style={{background: '#976ED7', display: 'flex', flexG
 const PanelE = () => (<div style={{background: '#F39A27', display: 'flex', flexGrow: 1}}>Panel E</div>)
 
 function App() {
-  const [panelData0, ] = useState(DUMMY_PANEL_DATA_0)
+  const [panelData0, setPanelData0 ] = useState(DUMMY_PANEL_DATA_0)
   const [panelData1, ] = useState(DUMMY_PANEL_DATA_1)
+  const [panelIds, setPanelIds] = useState([])
+
+  const onMaximize= () => {
+    console.log('maximize', { panelIds, panelData0 })
+    const nextGraph = maximizePanel(panelData0, panelIds)
+    setPanelData0(nextGraph)
+  }
+  const onMinimize = () => {
+    console.log('minimize', { panelIds, panelData0 })
+    const nextGraph = minimizePanel(panelData0, panelIds)
+    setPanelData0(nextGraph)
+  }
+  const onRestore = () => {
+    console.log('restore', { panelIds, panelData0 })
+  }
 
   return (
     <div className='App'>
@@ -57,6 +74,26 @@ function App() {
       >
         Example #1
       </span>
+      <div style={{ zIndex: 2}}>
+        <Select
+          label="React Multiple Select"
+          placeholder="Pick some"
+          onValuesChange={ values => setPanelIds(values)}
+          options={[
+            { value: 'A' },
+            { value: 'B' },
+            { value: 'C' },
+            { value: 'D' },
+            { value: 'E' }
+          ]}
+          multiple
+        />
+        <div style={{paddingTop: '0.5em'}}>
+          <button disabled={panelIds.length !== 1} onClick={onMaximize} style={{marginLeft: '1em', marginRight: '1em'}}>Maximize</button>
+          <button onClick={onMinimize} style={{marginLeft: '1em', marginRight: '1em'}}>Minimize</button>
+          <button onClick={onRestore} style={{marginLeft: '1em', marginRight: '1em'}}>Restore</button>
+        </div>
+      </div>
       <div
         style={{
           display: 'flex',
@@ -78,6 +115,8 @@ function App() {
         }}
       >
         <PanelManager
+          minimizedPanels={[]}
+          maximizedPanel={''}
           // onPanelDataChange={ nextPanelData => console.log('panel data change', { nextPanelData })}
           panelComponents={[
             {id: 'A', PanelComponent: PanelA},

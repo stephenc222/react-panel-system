@@ -1,12 +1,14 @@
 import React, { createContext, useState, useEffect } from 'react'
-import { updateGraph } from './PanelGraph'
+import { updateGraph } from '../PanelGraph'
 import Panel from '../Panel'
 
 export const PanelSystemContext = createContext()
 const getPercentChange = (previous, current) => ((current - previous) / previous * 100) / 100
-const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
+const PanelManager = ({ panelComponents, panelData, onPanelDataChange, minimizedPanels = [], maximizedPanel = '' }) => {
 
   const [panelDataContext, setPanelDataContext] = useState(panelData)
+  // initialize the context cache to the initial context value, to enable "restore" easily
+  const [panelDataContextCache, setPanelDataContextCache] = useState(panelData)
   const [draggingNode, setDraggingNode] = useState({})
   const [startPos, setStartPos] = useState({})
 
@@ -20,10 +22,12 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
     onPanelDataChange && onPanelDataChange(nextPanelDataContext)
   }
 
+  // TODO: consider performance improvements, such as memoization of this (if refactored to a pure function of panelNode data)
   const renderPanel = (panelNode) => {
     const nodeId = Object.keys(panelNode)[0]
     const panelChildData = panelDataContext.data[nodeId]
     const { PanelComponent } = panelComponents.find( ({id}) => nodeId === id )
+    console.log({ nodeId })
     return (
       <Panel {...panelChildData} nodeId={nodeId} key={nodeId}>
         <PanelComponent/>
@@ -83,7 +87,7 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
       window.addEventListener('mouseup', onMouseUp)
     }
   }, [])
-  
+  console.log('before render', { panelDataContext })
   return (
     <PanelSystemContext.Provider value={panelManagerContext}>
       <div
