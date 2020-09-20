@@ -49,17 +49,14 @@ function App() {
   const [panelIds, setPanelIds] = useState([])
 
   const onMaximize= () => {
-    console.log('maximize', { panelIds, panelData0 })
     const nextGraph = maximizePanel(panelData0, panelIds)
     setPanelData0(nextGraph)
   }
   const onMinimize = () => {
-    console.log('minimize', { panelIds, panelData0 })
     const nextGraph = minimizePanel(panelData0, panelIds)
     setPanelData0(nextGraph)
   }
   const onRestore = () => {
-    console.log('restore', { panelIds, panelData0 })
   }
 
   return (

@@ -27,7 +27,6 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange, minimized
     const nodeId = Object.keys(panelNode)[0]
     const panelChildData = panelDataContext.data[nodeId]
     const { PanelComponent } = panelComponents.find( ({id}) => nodeId === id )
-    console.log({ nodeId })
     return (
       <Panel {...panelChildData} nodeId={nodeId} key={nodeId}>
         <PanelComponent/>
@@ -87,7 +86,6 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange, minimized
       window.addEventListener('mouseup', onMouseUp)
     }
   }, [])
-  console.log('before render', { panelDataContext })
   return (
     <PanelSystemContext.Provider value={panelManagerContext}>
       <div

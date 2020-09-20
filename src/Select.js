@@ -35,7 +35,6 @@ export default class Select extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.values.length !== prevState.values.length) {
-      console.log('values changed', { values: this.state.values })
       this.props.onValuesChange(this.state.values)
     }
   }

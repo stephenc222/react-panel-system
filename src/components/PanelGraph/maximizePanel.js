@@ -1,17 +1,12 @@
-import { cloneDeep } from 'lodash'
 // maximize a panel
 // maximize a panel is defined as removing all other panels and remapping it's relationships
 // Mazimizing prevents any drag and drop
 
-
 export const maximizePanel = (origGraph, panelNodeId) => {
-  console.log('maximizePanel', { origGraph, panelNodeId })
   let panelNodeIdStr = ''
   if (Array.isArray(panelNodeId) && panelNodeId.length === 1) {
     panelNodeIdStr = panelNodeId[0]
   }
-  const nextGraph = cloneDeep(origGraph)
-  console.log({panelNodeIdStr})
   
   const newGraph = {
     adjList: [{
