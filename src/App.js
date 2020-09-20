@@ -46,6 +46,9 @@ const PanelE = () => (<div style={{background: '#F39A27', display: 'flex', flexG
 function App() {
   const [panelData0, setPanelData0 ] = useState(DUMMY_PANEL_DATA_0)
   const [panelData1, ] = useState(DUMMY_PANEL_DATA_1)
+  // used for "restore"
+  // TODO: integrate through an interface a component consuming the PanelManager can trigger
+  const [panelDataContextCache0, setPanelDataContextCache0] = useState(DUMMY_PANEL_DATA_0)
   const [panelIds, setPanelIds] = useState([])
 
   const onMaximize= () => {
@@ -57,6 +60,7 @@ function App() {
     setPanelData0(nextGraph)
   }
   const onRestore = () => {
+    setPanelData0(panelDataContextCache0)
   }
 
   return (

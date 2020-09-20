@@ -8,7 +8,6 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange, minimized
 
   const [panelDataContext, setPanelDataContext] = useState(panelData)
   // initialize the context cache to the initial context value, to enable "restore" easily
-  const [panelDataContextCache, setPanelDataContextCache] = useState(panelData)
   const [draggingNode, setDraggingNode] = useState({})
   const [startPos, setStartPos] = useState({})
 
