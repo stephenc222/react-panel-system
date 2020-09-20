@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import PanelManager, { minimizePanel, maximizePanel } from './components/PanelManager'
-import Select from './Select'
-import './App.css';
+import PanelManager, { minimizePanel, maximizePanel } from '../components/PanelManager'
+import Select from '../../src/Select'
+import '../../src/App.css';
 
 const DUMMY_PANEL_DATA_0 = {
   data : {
@@ -64,16 +64,6 @@ function App() {
 
   return (
     <div className='App'>
-      <span
-        style={{
-          fontSize: 18,
-          fontWeight: 'bold',
-          paddingTop: '1em',
-          paddingBottom: '1em',
-        }}
-      >
-        Example #1
-      </span>
       <div style={{ zIndex: 2}}>
         <Select
           label="Panel Select"
@@ -115,6 +105,8 @@ function App() {
         }}
       >
         <PanelManager
+          minimizedPanels={[]}
+          maximizedPanel={''}
           onPanelDataChange={ nextPanelData => setPanelData0(nextPanelData)}
           panelComponents={[
             {id: 'A', PanelComponent: PanelA},
@@ -126,46 +118,6 @@ function App() {
           panelData={panelData0}
         />
         </div>
-      </div>
-      <span
-        style={{
-          fontSize: 18,
-          fontWeight: 'bold',
-          paddingTop: '1em',
-          paddingBottom: '1em',
-        }}
-      >
-        Example #2
-      </span>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          height: '90vh',
-          flexGrow: 1,
-          padding: '1em',
-          flexBasis: 1
-        }}
-      > 
-      <div
-        style={{
-          display: 'flex',
-          border: '1px solid darkblue',
-          height: '100%',
-          width: '100%'
-        }}
-      >
-        <PanelManager
-          onPanelDataChange={ nextPanelData => setPanelData1(nextPanelData)}
-          panelComponents={[
-            {id: 'A', PanelComponent: PanelA},
-            {id: 'B', PanelComponent: PanelB},
-            {id: 'C', PanelComponent: PanelC},
-            {id: 'D', PanelComponent: PanelD},
-          ]}
-          panelData={panelData1}
-        />
-      </div>
       </div>
     </div>
   );
