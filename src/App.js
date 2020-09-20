@@ -45,10 +45,10 @@ const PanelE = () => (<div style={{background: '#F39A27', display: 'flex', flexG
 
 function App() {
   const [panelData0, setPanelData0 ] = useState(DUMMY_PANEL_DATA_0)
-  const [panelData1, ] = useState(DUMMY_PANEL_DATA_1)
+  const [panelData1, setPanelData1 ] = useState(DUMMY_PANEL_DATA_1)
   // used for "restore"
   // TODO: integrate through an interface a component consuming the PanelManager can trigger
-  const [panelDataContextCache0, setPanelDataContextCache0] = useState(DUMMY_PANEL_DATA_0)
+  const [panelDataContextCache0, ] = useState(DUMMY_PANEL_DATA_0)
   const [panelIds, setPanelIds] = useState([])
 
   const onMaximize= () => {
@@ -118,7 +118,7 @@ function App() {
         <PanelManager
           minimizedPanels={[]}
           maximizedPanel={''}
-          // onPanelDataChange={ nextPanelData => console.log('panel data change', { nextPanelData })}
+          onPanelDataChange={ nextPanelData => setPanelData0(nextPanelData)}
           panelComponents={[
             {id: 'A', PanelComponent: PanelA},
             {id: 'B', PanelComponent: PanelB},
@@ -159,7 +159,7 @@ function App() {
         }}
       >
         <PanelManager
-          // onPanelDataChange={ nextPanelData => console.log('panel data change', { nextPanelData })}
+          onPanelDataChange={ nextPanelData => setPanelData1(nextPanelData)}
           panelComponents={[
             {id: 'A', PanelComponent: PanelA},
             {id: 'B', PanelComponent: PanelB},

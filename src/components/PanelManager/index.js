@@ -6,25 +6,18 @@ export const PanelSystemContext = createContext()
 const getPercentChange = (previous, current) => ((current - previous) / previous * 100) / 100
 const PanelManager = ({ panelComponents, panelData, onPanelDataChange, minimizedPanels = [], maximizedPanel = '' }) => {
 
-  const [panelDataContext, setPanelDataContext] = useState(panelData)
-  // initialize the context cache to the initial context value, to enable "restore" easily
   const [draggingNode, setDraggingNode] = useState({})
   const [startPos, setStartPos] = useState({})
 
-  useEffect(() => {
-    setPanelDataContext(panelData)
-  }, [panelData])
-
   const updatePanelDataContext = (changeEvent) => {
-    const nextPanelDataContext = updateGraph(panelDataContext, changeEvent)
-    setPanelDataContext(nextPanelDataContext)
+    const nextPanelDataContext = updateGraph(panelData, changeEvent)
     onPanelDataChange && onPanelDataChange(nextPanelDataContext)
   }
 
   // TODO: consider performance improvements, such as memoization of this (if refactored to a pure function of panelNode data)
   const renderPanel = (panelNode) => {
     const nodeId = Object.keys(panelNode)[0]
-    const panelChildData = panelDataContext.data[nodeId]
+    const panelChildData = panelData.data[nodeId]
     const { PanelComponent } = panelComponents.find( ({id}) => nodeId === id )
     return (
       <Panel {...panelChildData} nodeId={nodeId} key={nodeId}>
@@ -32,7 +25,7 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange, minimized
       </Panel>
     )
   }
-  const panelManagerContext = [{panelDataContext, draggingNode}, { updatePanelDataContext, setDraggingNode, setStartPos }]
+  const panelManagerContext = [{panelDataContext: panelData, draggingNode}, { updatePanelDataContext, setDraggingNode, setStartPos }]
   const onMouseMove = (event) => {
     event.preventDefault()
     const { nodeId, edge: edgeType } = draggingNode
@@ -102,7 +95,7 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange, minimized
         }}
       >
         {
-          panelDataContext.adjList.map(panelNode => {
+          panelData.adjList.map(panelNode => {
             return renderPanel(panelNode)
           })
         }
