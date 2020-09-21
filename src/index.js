@@ -1,11 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import PanelManager, { maximizePanel, minimizePanel } from './PanelManager'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+export { maximizePanel, minimizePanel }
+export default PanelManager

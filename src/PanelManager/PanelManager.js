@@ -1,10 +1,10 @@
-import React, { createContext, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { updateGraph } from './PanelGraph'
+import { PanelSystemContext } from '../context'
 import Panel from '../Panel'
 
-export const PanelSystemContext = createContext()
 const getPercentChange = (previous, current) => ((current - previous) / previous * 100) / 100
-const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
+export const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
 
   const [draggingNode, setDraggingNode] = useState({})
   const [startPos, setStartPos] = useState({})
@@ -14,7 +14,6 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
     onPanelDataChange && onPanelDataChange(nextPanelDataContext)
   }
 
-  // TODO: consider performance improvements, such as memoization of this (if refactored to a pure function of panelNode data)
   const renderPanel = (panelNode) => {
     const nodeId = Object.keys(panelNode)[0]
     const panelChildData = panelData.data[nodeId]
@@ -89,9 +88,15 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
           background: 'yellow',
           height: '100%',
           width: '100%',
-          cursor: draggingNode && draggingNode.edge && (draggingNode.edge === 'LE' || draggingNode.edge === 'RE')
-          ? 'col-resize' 
-          : draggingNode && draggingNode.edge && (draggingNode.edge === 'TV' || draggingNode.edge === 'BV') ? 'row-resize' : ''
+          cursor: draggingNode
+    && draggingNode.edge 
+    && (draggingNode.edge === 'LE' || draggingNode.edge === 'RE')
+      ? 'col-resize' 
+      : draggingNode
+        && draggingNode.edge
+        && (draggingNode.edge === 'TV' || draggingNode.edge === 'BV')
+          ? 'row-resize'
+          : ''
         }}
       >
         {
@@ -103,5 +108,3 @@ const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
     </PanelSystemContext.Provider>
   )
 }
-
-export default PanelManager

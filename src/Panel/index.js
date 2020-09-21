@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { PanelSystemContext } from '../PanelManager/PanelManager'
+import { PanelSystemContext } from '../context'
 import './Panel.css'
 
 // NOTE: the Drag API cannot be used if I want to set a cursor while "dragging"

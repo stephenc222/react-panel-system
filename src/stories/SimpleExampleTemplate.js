@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import PanelManager , { minimizePanel, maximizePanel} from '../components/PanelManager'
-import Select from '../../src/Select'
-import '../../src/App.css';
+import PanelManager , { minimizePanel, maximizePanel} from '../index.js'
+import Select from './Select'
+import './App.css';
 
 // initial dummy panel data
 const DUMMY_PANEL_DATA = {
