@@ -4,7 +4,15 @@ import { PanelSystemContext } from '../context'
 import Panel from '../Panel'
 
 const getPercentChange = (previous, current) => ((current - previous) / previous * 100) / 100
-export const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) => {
+export const PanelManager = ({
+  panelComponents,
+  panelData,
+  onPanelDataChange,
+  leftEdgeClassname = 'panel-horizontal-edge--left',
+  rightEdgeClassname = 'panel-horizontal-edge--right',
+  topEdgeClassname = 'panel-vertical-edge--top',
+  bottomEdgeClassname  = 'panel-vertical-edge--bottom'
+}) => {
 
   const [draggingNode, setDraggingNode] = useState({})
   const [startPos, setStartPos] = useState({})
@@ -19,7 +27,15 @@ export const PanelManager = ({ panelComponents, panelData, onPanelDataChange }) 
     const panelChildData = panelData.data[nodeId]
     const { PanelComponent } = panelComponents.find( ({id}) => nodeId === id )
     return (
-      <Panel {...panelChildData} nodeId={nodeId} key={nodeId}>
+      <Panel
+        key={nodeId}
+        nodeId={nodeId}
+        leftEdgeClassname={leftEdgeClassname}
+        rightEdgeClassname={rightEdgeClassname}
+        topEdgeClassname={topEdgeClassname}
+        bottomEdgeClassname={bottomEdgeClassname}
+        {...panelChildData}
+      >
         <PanelComponent/>
       </Panel>
     )

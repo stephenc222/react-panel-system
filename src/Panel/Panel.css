@@ -2,6 +2,23 @@
   cursor: row-resize;
 }
 
+.panel-vertical-edge--top {
+  border: 0.1px solid grey;
+}
+
+.panel-vertical-edge--bottom {
+  border: 0.1px solid lightgrey;
+}
+
+.panel-horizontal-edge--left {
+  border: 0.1px solid grey;
+
+}
+
+.panel-horizontal-edge--right {
+  border: 0.1px solid lightgrey;
+}
+
 .panel-horizontal-edge {
   cursor: col-resize;
 }

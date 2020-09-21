@@ -2,9 +2,22 @@ import React, { useContext } from 'react'
 import { PanelSystemContext } from '../context'
 import './Panel.css'
 
+const showEdge = (isTrue, classname) => isTrue ? classname : ''
+
 // NOTE: the Drag API cannot be used if I want to set a cursor while "dragging"
 // must use mouse move, down and up to simulate drag
-const Panel = ({ w, h, x, y, children, nodeId, }) => {
+const Panel = ({
+  w,
+  h,
+  x,
+  y,
+  children,
+  nodeId,
+  leftEdgeClassname,
+  rightEdgeClassname,
+  topEdgeClassname,
+  bottomEdgeClassname
+}) => {
 
   const [, { setDraggingNode, setStartPos }] = useContext(PanelSystemContext)
 
@@ -25,8 +38,7 @@ const Panel = ({ w, h, x, y, children, nodeId, }) => {
       }}>
       <div
         onMouseDown={event => onMouseDown(event, 'LE')}
-        className='panel-horizontal-edge'
-        style={{ border: x !== 0 ? '4px solid skyblue': 'none', display: x !== 1 ? '' : 'none'}}
+        className={`${showEdge(x !== 0, leftEdgeClassname )} panel-horizontal-edge`}
       />
         <div
           style={{
@@ -37,20 +49,17 @@ const Panel = ({ w, h, x, y, children, nodeId, }) => {
         >
           <div
             onMouseDown={event => onMouseDown(event, 'TV')}
-            className='panel-vertical-edge'
-            style={{ border: y !== 0 ? '4px solid lime': 'none', display: y !== 0 ? '' : 'none'}}
+            className={`${showEdge(y !== 0, topEdgeClassname )} panel-vertical-edge`}
           />
           {children}
           <div
             onMouseDown={event => onMouseDown(event, 'BV')}
-            className='panel-vertical-edge'
-            style={{ border: y === 0 && y + h !== 1 ? '4px solid black': 'none', display: y === 0 && y + h !== 0 ? '' : 'none'}}
+            className={`${showEdge(y === 0 && y + h !== 1, bottomEdgeClassname )} panel-vertical-edge`}
           />
         </div>
       <div
         onMouseDown={event => onMouseDown(event, 'RE')}
-        className='panel-horizontal-edge'
-        style={{ border: x + w !== 1 ? '4px solid magenta': 'none', display: x + w !== 1 ? '' : 'none'}}
+        className={`${showEdge(x + w !== 1, rightEdgeClassname )} panel-horizontal-edge`}
       />
     </div>
   )
