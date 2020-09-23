@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { updateGraph } from './PanelGraph'
 import { PanelSystemContext } from '../context'
 import Panel from '../Panel'
+import { isContextConsumer } from 'react-is'
 
 const getPercentChange = (previous, current) => ((current - previous) / previous * 100) / 100
 export const PanelManager = ({
@@ -13,7 +14,8 @@ export const PanelManager = ({
   topEdgeClassname = 'panel-vertical-edge--top',
   bottomEdgeClassname  = 'panel-vertical-edge--bottom'
 }) => {
-
+  
+  const panelManagerRef = useRef(null)
   const [draggingNode, setDraggingNode] = useState({})
   const [startPos, setStartPos] = useState({})
 
@@ -43,6 +45,10 @@ export const PanelManager = ({
   const panelManagerContext = [{panelDataContext: panelData, draggingNode}, { updatePanelDataContext, setDraggingNode, setStartPos }]
   const onMouseMove = (event) => {
     event.preventDefault()
+    const { width, height, x, y } = panelManagerRef.current.getBoundingClientRect()
+    const nextPanelWidthPercent = (event.pageX - x) / width
+    const nextPanelHeightPercent = (event.pageY - y) / height
+    // console.log({pageX: event.pageX, pageY: event.pageY, pageXPercent: (event.pageX - x) / width, pageYPercent: (event.pageY - y) / height })
     const { nodeId, edge: edgeType } = draggingNode
     if (nodeId === undefined) {
       return
@@ -53,11 +59,30 @@ export const PanelManager = ({
       if (isNaN(changeX) || changeX === 0) {
         return
       }
+      if (nextPanelWidthPercent === 0 || isNaN(nextPanelWidthPercent)) {
+        return
+      }
+      const currentWidthPercent = panelData.data[nodeId].w 
+      const currentXPercent = panelData.data[nodeId].x
+      const xDiff = edgeType === 'RE'
+        ? nextPanelWidthPercent - currentWidthPercent - currentXPercent
+        : currentXPercent - nextPanelWidthPercent
+      console.log({
+        // edgeType,
+        // nextPanelHeightPercent,
+        xDiff,
+        nextPanelWidthPercent,
+        currentWidthPercent,
+        currentXPercent
+        // currentHeightPercent: panelData.data[nodeId].h
+        })
       const changeEvent = {
         nodeId,
         edgeType,
         data: {
-          w: changeX * (window.innerHeight / window.innerWidth),
+          // w: changeX * (window.innerHeight / window.innerWidth),
+          // FIXME: 'LE' transformations are broken and 'RE' with 'LE' related nodes are broken
+          w: xDiff,
           h: 0
         }
       }
@@ -70,12 +95,24 @@ export const PanelManager = ({
       if (isNaN(changeY) || changeY === 0) {
         return
       }
+      if (nextPanelHeightPercent === 0 || isNaN(nextPanelHeightPercent)) {
+        return
+      }
+      // console.log('WTF:', { height, pageY: event.pageY, y })
+      const currentHeightPercent = panelData.data[nodeId].h
+      const currentYPercent = panelData.data[nodeId].y
+      const diffChange = nextPanelHeightPercent - currentHeightPercent
+      const invertedDiffChange = currentHeightPercent - nextPanelHeightPercent
+      const yDiff = edgeType === 'BV'
+        ? diffChange
+        : invertedDiffChange
       const changeEvent = {
         nodeId,
         edgeType,
         data: {
           w: 0,
-          h: changeY * (window.innerHeight / window.innerWidth)
+          // FIXME: All 'TV' and 'BV' transformations are broken
+          h: edgeType === 'BV' ? yDiff : yDiff,
         }
       }
       updatePanelDataContext(changeEvent)
@@ -96,6 +133,7 @@ export const PanelManager = ({
   return (
     <PanelSystemContext.Provider value={panelManagerContext}>
       <div
+        ref={panelManagerRef}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         style={{

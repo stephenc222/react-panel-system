@@ -3,20 +3,20 @@
 }
 
 .panel-vertical-edge--top {
-  border: 0.1px solid grey;
+  border: 4px solid grey;
 }
 
 .panel-vertical-edge--bottom {
-  border: 0.1px solid lightgrey;
+  border: 4px solid lightgrey;
 }
 
 .panel-horizontal-edge--left {
-  border: 0.1px solid grey;
+  border: 4px solid grey;
 
 }
 
 .panel-horizontal-edge--right {
-  border: 0.1px solid lightgrey;
+  border: 4px solid lightgrey;
 }
 
 .panel-horizontal-edge {

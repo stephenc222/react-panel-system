@@ -211,21 +211,32 @@ export const updateGraph = ( origGraph, changeEvent) => {
   }
   // TV only impact a minimal number of other nodes (since these edges will not be container-wide like horizontal edges)
   // TODO: probably need more testing on vertical relationships
+  // FIXME: broken mainly on "TV"
   if (edgeType === 'TV') {
-    // the node in question has offset and height change
-    if (nextGraph.data[nodeId].y === 0) {
+    console.log('TV')
+    // if (nextGraph.data[nodeId].y - data.h < MINIMUM_THRESHOLD) {
+    //   return nextGraph
+    // }
+    // if (nodeData.y + nodeData.h - data.h < MINIMUM_THRESHOLD || nodeData.y + nodeData.h + data.h > MAXIMUM_THRESHOLD) {
+    //   return nextGraph
+    // }
+    if (data.h + nodeData.y + nodeData.h < MINIMUM_THRESHOLD) {
       return nextGraph
     }
-    if (nodeData.h + data.h < MINIMUM_THRESHOLD || nodeData.h + data.h > MAXIMUM_THRESHOLD) {
-      return nextGraph
+    console.log({ dataH: data.h})
+    // debugger
+    if ( nextGraph.data[nodeId].y + data.h > MINIMUM_THRESHOLD) {
+      nextGraph.data[nodeId].y = nodeData.y + data.h
+      nextGraph.data[nodeId].h = 1 - nodeData.y
+      // console.log('after:', { data: nextGraph.data[nodeId]})
+      tvRelatedNodes.forEach( relatedNodeId => {
+        // it's height changes, and the offset for the related node
+        // console.log({relatedNodeId})
+        nextGraph.data[relatedNodeId].h = nextGraph.data[nodeId].y
+        // nextGraph.data[relatedNodeId].y = nextGraph.data[relatedNodeId].y + data.h
+      })
     }
-    nextGraph.data[nodeId].y = nodeData.y - data.h
-    nextGraph.data[nodeId].h = nodeData.h + data.h
-    tvRelatedNodes.forEach( relatedNodeId => {
-      // it's height changes, but not the offset for the related node
-      const relatedNodeHeight = nextGraph.data[relatedNodeId].h
-      nextGraph.data[relatedNodeId].h = relatedNodeHeight - data.h
-    })
+    return nextGraph
   }
   if (edgeType === 'BV') {
     // the node in question has only height change and no offset change
