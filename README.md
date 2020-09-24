@@ -3,6 +3,7 @@
 ## Overview
 
 A system of UI Panels to enable Panels to be easily resizable, persistent and configurable.
+Demo [here](https://stephenc222.github.io/react-panel-system/).
 
 ## Architechture
 

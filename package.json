@@ -20,7 +20,8 @@
     "build": "rollup -c",
     "test": "echo TODO: tests...",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "deploy-storybook": "storybook-to-ghpages"
   },
   "browserslist": {
     "production": [
@@ -48,6 +49,7 @@
     "@storybook/node-logger": "^6.0.21",
     "@storybook/preset-create-react-app": "^3.1.4",
     "@storybook/react": "^6.0.21",
+    "@storybook/storybook-deployer": "^2.8.6",
     "babel-loader": "^8.1.0",
     "react-is": "^16.13.1",
     "rollup-plugin-babel": "^4.4.0",
