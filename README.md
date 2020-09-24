@@ -5,6 +5,101 @@
 A system of UI Panels to enable Panels to be easily resizable, persistent and configurable.
 Demo [here](https://stephenc222.github.io/react-panel-system/).
 
+## Quick Start
+
+`yarn add react-panel-system`
+
+```jsx
+import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
+import PanelManager , { minimizePanel, maximizePanel} from 'react-panel-system'
+
+// initial dummy panel data
+const DUMMY_PANEL_DATA = {
+  data : {
+    A: { w: 0.5, h: 1.0, x: 0, y: 0 },
+    B: { w: 0.5, h: 1.0, x: 0.5, y: 0},
+  },
+  adjList: [
+    { A: { re: ['B'], le: [], tv: [], bv: [] } },
+    { B: { le: ['A',], re: [], tv: [], bv: [] } },
+  ]
+}
+
+const PanelA = () => (
+  <div
+    style={{
+      background: '#C23B23',
+      display: 'flex',
+      flexGrow: 1
+    }}>
+    Panel A
+  </div>
+)
+const PanelB = () => (
+  <div
+    style={{
+      background: '#03C03C',
+      display: 'flex',
+      flexGrow: 1
+    }}>
+    Panel B
+  </div>
+)
+
+const App = () => {
+  const [panelData, setPanelData] = useState(DUMMY_PANEL_DATA)
+
+  return (
+    <div>
+      <span
+        style={{
+          paddingTop: '1em',
+          paddingBottom: '1em',
+        }}
+      >
+      </span>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          height: '90vh',
+          flexGrow: 1,
+          padding: '1em',
+          flexBasis: 1
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            border: '1px solid darkblue',
+            height: '100%',
+            width: '100%'
+          }}
+        >
+          <PanelManager
+            onPanelDataChange={ nextPanelData => setPanelData(nextPanelData)}
+            panelComponents={[
+              {id: 'A', PanelComponent: PanelA},
+              {id: 'B', PanelComponent: PanelB},
+            ]}
+            panelData={panelData}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+```
+
 ## Architechture
 
 Primarily consists of 3 main entities:
