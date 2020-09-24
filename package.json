@@ -13,6 +13,12 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stephenc222/react-panel-system"
+  },
+  "homepage": "https://stephenc222.github.io/react-panel-system/",
+  "bugs": "https://github.com/stephenc222/react-panel-system/issues",
   "eslintConfig": {
     "extends": "react-app"
   },
