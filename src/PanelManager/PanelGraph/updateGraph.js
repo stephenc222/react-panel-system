@@ -111,23 +111,37 @@ export const updateGraph = ( origGraph, changeEvent) => {
   // first, update the node that changed
   const nextGraph = cloneDeep(origGraph)
   const nodeData = nextGraph.data[nodeId]
-  // RE means these related nodes will have a width and x change
-  const reRelatedNodes = nextGraph.adjList.find( node => 
-    Object.keys(node)[0] === nodeId )[nodeId].re || []
-  // LE means these related nodes will have only a width and no x change
-  const leRelatedNodes = nextGraph.adjList.find( node => 
-    Object.keys(node)[0] === nodeId )[nodeId].le || []
-  // TV means these nodes will only have a height change and no y change
-  const tvRelatedNodes = nextGraph.adjList.find( node =>
-    Object.keys(node)[0] === nodeId )[nodeId].tv || []
   // BV means these nodes will have a height change and y change
   const bvRelatedNodes = nextGraph.adjList.find( node =>
     Object.keys(node)[0] === nodeId )[nodeId].bv || []
   // if the change node width did not change, then the horizontally related node widths will not change
 
+  if (edgeType === 'BV') {
+    // the node in question has only height change and no offset change
+    if (nextGraph.data[nodeId].y + nextGraph.data[nodeId].h === 1) {
+      return nextGraph
+    }
+    if (nodeData.y + nodeData.h + data.h < MINIMUM_THRESHOLD || nodeData.y + nodeData.h + data.h > MAXIMUM_THRESHOLD) {
+      return nextGraph
+    }
+    nextGraph.data[nodeId].h = nodeData.h + data.h
+    bvRelatedNodes.forEach( relatedNodeId => {
+      // it's height changes, and the offset for the related node
+      const relatedNodeHeight = nextGraph.data[relatedNodeId].h
+      nextGraph.data[relatedNodeId].h = relatedNodeHeight - data.h
+      nextGraph.data[relatedNodeId].y = nextGraph.data[relatedNodeId].y + data.h
+    })
+    return nextGraph
+  }
+    // TV means these nodes will only have a height change and no y change
+  const tvRelatedNodes = nextGraph.adjList.find( node =>
+    Object.keys(node)[0] === nodeId )[nodeId].tv || []
   // if event was on the RE of a node:
   // if node also has a TV or BV relationship, only adjust it's width, else adjust it's width and x offset
   if (edgeType === 'RE') {
+  // RE means these related nodes will have a width and x change
+  const reRelatedNodes = nextGraph.adjList.find( node => 
+    Object.keys(node)[0] === nodeId )[nodeId].re || []
     // if this is on the edge of the container, don't change anything
     if (nodeData.w + nodeData.x === 1) {
       return nextGraph
@@ -166,9 +180,12 @@ export const updateGraph = ( origGraph, changeEvent) => {
         nextGraph.data[relatedNodeId].x = relatedNodeX + data.w
       }
     })
+    return nextGraph
   }
   if (edgeType === 'LE') {
-    // nextGraph.data[nodeId].x = nodeData.x + data.w
+    // LE means these related nodes will have only a width and no x change
+    const leRelatedNodes = nextGraph.adjList.find( node => 
+      Object.keys(node)[0] === nodeId )[nodeId].le || []
     if (nodeData.x === 0) {
       return nextGraph
     }
@@ -208,51 +225,28 @@ export const updateGraph = ( origGraph, changeEvent) => {
         nextGraph.data[relatedNodeId].w = relatedNodeWidth - data.w
       }
     })
+    return nextGraph
   }
   // TV only impact a minimal number of other nodes (since these edges will not be container-wide like horizontal edges)
   // TODO: probably need more testing on vertical relationships
-  // FIXME: broken mainly on "TV"
   if (edgeType === 'TV') {
-    console.log('TV')
-    // if (nextGraph.data[nodeId].y - data.h < MINIMUM_THRESHOLD) {
-    //   return nextGraph
-    // }
-    // if (nodeData.y + nodeData.h - data.h < MINIMUM_THRESHOLD || nodeData.y + nodeData.h + data.h > MAXIMUM_THRESHOLD) {
-    //   return nextGraph
-    // }
     if (data.h + nodeData.y + nodeData.h < MINIMUM_THRESHOLD) {
       return nextGraph
     }
-    console.log({ dataH: data.h})
-    // debugger
-    if ( nextGraph.data[nodeId].y + data.h > MINIMUM_THRESHOLD) {
-      nextGraph.data[nodeId].y = nodeData.y + data.h
-      nextGraph.data[nodeId].h = 1 - nodeData.y
-      // console.log('after:', { data: nextGraph.data[nodeId]})
+    if ( data.h > MINIMUM_THRESHOLD) {
+      nextGraph.data[nodeId].y = data.h
+      if (!bvRelatedNodes.length) {
+        nextGraph.data[nodeId].h = 1 - nodeData.y
+      } else {
+        bvRelatedNodes.forEach( relatedNodeId => {
+          nextGraph.data[nodeId].h = nextGraph.data[relatedNodeId].y
+        })
+      }
       tvRelatedNodes.forEach( relatedNodeId => {
-        // it's height changes, and the offset for the related node
-        // console.log({relatedNodeId})
         nextGraph.data[relatedNodeId].h = nextGraph.data[nodeId].y
-        // nextGraph.data[relatedNodeId].y = nextGraph.data[relatedNodeId].y + data.h
       })
     }
     return nextGraph
-  }
-  if (edgeType === 'BV') {
-    // the node in question has only height change and no offset change
-    if (nextGraph.data[nodeId].y + nextGraph.data[nodeId].h === 1) {
-      return nextGraph
-    }
-    if (nodeData.y + nodeData.h + data.h < MINIMUM_THRESHOLD || nodeData.y + nodeData.h + data.h > MAXIMUM_THRESHOLD) {
-      return nextGraph
-    }
-    nextGraph.data[nodeId].h = nodeData.h + data.h
-    bvRelatedNodes.forEach( relatedNodeId => {
-      // it's height changes, and the offset for the related node
-      const relatedNodeHeight = nextGraph.data[relatedNodeId].h
-      nextGraph.data[relatedNodeId].h = relatedNodeHeight - data.h
-      nextGraph.data[relatedNodeId].y = nextGraph.data[relatedNodeId].y + data.h
-    })
   }
   return nextGraph
 }

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { updateGraph } from './PanelGraph'
 import { PanelSystemContext } from '../context'
 import Panel from '../Panel'
-import { isContextConsumer } from 'react-is'
 
 const getPercentChange = (previous, current) => ((current - previous) / previous * 100) / 100
 export const PanelManager = ({
@@ -48,7 +47,6 @@ export const PanelManager = ({
     const { width, height, x, y } = panelManagerRef.current.getBoundingClientRect()
     const nextPanelWidthPercent = (event.pageX - x) / width
     const nextPanelHeightPercent = (event.pageY - y) / height
-    // console.log({pageX: event.pageX, pageY: event.pageY, pageXPercent: (event.pageX - x) / width, pageYPercent: (event.pageY - y) / height })
     const { nodeId, edge: edgeType } = draggingNode
     if (nodeId === undefined) {
       return
@@ -67,15 +65,6 @@ export const PanelManager = ({
       const xDiff = edgeType === 'RE'
         ? nextPanelWidthPercent - currentWidthPercent - currentXPercent
         : currentXPercent - nextPanelWidthPercent
-      console.log({
-        // edgeType,
-        // nextPanelHeightPercent,
-        xDiff,
-        nextPanelWidthPercent,
-        currentWidthPercent,
-        currentXPercent
-        // currentHeightPercent: panelData.data[nodeId].h
-        })
       const changeEvent = {
         nodeId,
         edgeType,
@@ -98,20 +87,17 @@ export const PanelManager = ({
       if (nextPanelHeightPercent === 0 || isNaN(nextPanelHeightPercent)) {
         return
       }
-      // console.log('WTF:', { height, pageY: event.pageY, y })
       const currentHeightPercent = panelData.data[nodeId].h
-      const currentYPercent = panelData.data[nodeId].y
       const diffChange = nextPanelHeightPercent - currentHeightPercent
-      const invertedDiffChange = currentHeightPercent - nextPanelHeightPercent
       const yDiff = edgeType === 'BV'
         ? diffChange
-        : invertedDiffChange
+        : nextPanelHeightPercent
       const changeEvent = {
         nodeId,
         edgeType,
         data: {
           w: 0,
-          // FIXME: All 'TV' and 'BV' transformations are broken
+          // TODO: further testing on vertical relationship-based transformations
           h: edgeType === 'BV' ? yDiff : yDiff,
         }
       }
