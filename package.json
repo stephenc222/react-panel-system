@@ -5,9 +5,6 @@
   "main": "dist/index.js",
   "browser": "dist/index.js",
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "lodash": "^4.17.20",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -56,6 +53,9 @@
     "@storybook/preset-create-react-app": "^3.1.4",
     "@storybook/react": "^6.0.21",
     "@storybook/storybook-deployer": "^2.8.6",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "babel-loader": "^8.1.0",
     "react-is": "^16.13.1",
     "rollup-plugin-babel": "^4.4.0",
@@ -67,7 +67,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.3"
   },
   "peerDependencies": {
-    "react": "file: ../react-panel-system-test-app/node_modules/react",
-    "react-dom": "file: ../react-panel-system-test-app/node_modules/react-dom"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }
