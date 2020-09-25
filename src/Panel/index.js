@@ -54,12 +54,12 @@ const Panel = ({
           {children}
           <div
             onMouseDown={event => onMouseDown(event, 'BV')}
-            className={`${showEdge(y === 0 && y + h !== 1, bottomEdgeClassname )} panel-vertical-edge`}
+            className={`${showEdge(y === 0 && y + h <= 0.99, bottomEdgeClassname )} panel-vertical-edge`}
           />
         </div>
       <div
         onMouseDown={event => onMouseDown(event, 'RE')}
-        className={`${showEdge(x + w !== 1, rightEdgeClassname )} panel-horizontal-edge`}
+        className={`${showEdge(x + w <= 0.99, rightEdgeClassname )} panel-horizontal-edge`}
       />
     </div>
   )
