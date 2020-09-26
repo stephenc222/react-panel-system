@@ -1,6 +1,7 @@
 # React Panel System
 
 A system of resizable, persistent and configurable panels. Built with React.
+
 Demo [here](https://stephenc222.github.io/react-panel-system/).
 
 ## Quick Start
@@ -10,7 +11,7 @@ Demo [here](https://stephenc222.github.io/react-panel-system/).
 ```jsx
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import PanelManager , { minimizePanel, maximizePanel} from 'react-panel-system'
+import PanelManager , { minimizePanel, maximizePanel } from 'react-panel-system'
 
 // initial dummy panel data
 const DUMMY_PANEL_DATA = {
@@ -98,27 +99,22 @@ ReactDOM.render(
 
 ```
 
-## Architechture
+## Props
 
-Primarily consists of 3 main entities:
+| Prop                           |      Type      | Description |
+| :----------------------------- | :------------: | :----------|
+| panelData <br/> _(required)_    |    object    | This is the core data structure of `react-panel-system`. It consists of two properties, an object called `data` and an array called `adjList`. <br/> <br/> The `data` object property describes the x offset and y offset, in percentage, of a certain panel from the top left corner (the (0,0) coordinate of the `PanelManager`). The top-level keys in `data` are the same panel ids that map directly to `panelComponents`. <br/> <br/> The `adjList` array property is similar to an adjacency list, where each object in the array has a top-level key of it's panel Id, and then four arrays describing the kinds of edge-based relationships that a particular panel has. For example, in the "Simple Example", panel with id "A" shares a right edge with "B", and has no other relationships to "B" or any other node, because there are only 2 nodes in that example in the `panelData`. Conversely, in that example, panel with id "B" shares a left edge with "A". <br/> <br/>__NOTE:__ Panel relationships are intentionally "redundant" to ensure reliable transformation on "minimize" and "maximize" See [Data Helper Functions](#Data-Helper-Functions).    |
+| panelComponents <br/> _(required)_ | array | A required array of objects, where each object in the array has expected properties of `id` and `PanelComponent`.<br/> <br/> The `id` property maps directly to the `id` of the same panel in `panelData`, so that `react-panel-system` can correctly render the component set to the corresponding value of `PanelComponent`, for this same `id`.<br/> <br/>__NOTE:__ `react-panel-system` expects each `PanelComponent` to be responsible for fetching it's own data, and thus self-contained, whether that is through a state management solution like Redux or React Context, or fetching it's data on component mount.|
+onPanelDataChange<br/> _(required)_  | function | This is the callback prop that is passed the next state of `panelData`. This should directly correspond to the state value passed as `panelData` to `PanelManager`. A simple implementation of `onPanelDataChange` prop would look like this: <br/></br>`onPanelDataChange={panelData => this.setState({ panelData })}` <br/></br>or a React Hooks equivalent like: <br/><br/>`onPanelDataChange={panelData => setPanelData(panelData)}`|
+leftEdgeClassName | string | The CSS class to apply to the left edge (the draggable edge). If supplied, this will override the default CSS class.
+rightEdgeClassName | string | The CSS class to apply to the right edge (the draggable edge). If supplied, this will override the default CSS class.
+topEdgeClassName | string | The CSS class to apply to the top edge (the draggable edge). If supplied, this will override the default CSS class.
+bottomEdgeClassName | string | The CSS class to apply to the bottom edge (the draggable edge). If supplied, this will override the default CSS class.
 
-- Panel
-- PanelManager
-- PanelGraph
+## Data Helper Functions
 
-### Panel
+Using these data helper functions, you can easily update `panelData` to respond to typical panel UX concerns, like "maximizing" and "minimizing" panels. These functions are exported from the root of the package, along with `PanelManager`
 
-Each Container of individual, variable content, to enable standard component wrapping without undue influence on children implementation to simplify persistence, drag-based resizing, as well as configuration from JSON. Assumes children of Panel are encapsulated, so do not rely on Panel or PanelManager to handle any data fetching concerns
+- **`maximizePanel`**: Takes the current `panelData` data structure, and a panel id of an existing panel in `panelData` and returns the next state of `panelData` with the corresponding panel "maximized". "Maximized" is defined as one panel, that is full width, full height of the container of `PanelManager`, with no draggable edges
 
-### PanelManager
-
-Manages and renders Panels. This means handling order, serialization of Panel position, and calculation of change events to pass to PanelGraph. PanelManager will expand to the entirety given to it by it's parent. Accepts a callback that will be called with an object of panels whose positions have changed.
-
-### PanelGraph
-
-This is the set of functions that form the API that handles graph transformations based on change events received from the PanelManager. Graph updates result in a new, deeply copied graph data structure for the following reasons:
-
-1. Modern component libraries such as React do not handle well performing UI state updates with objects that maintain references to objects used in a previous UI state
-2. The size of the panel graph probably would never grow to be very large (even 12 panels would seem an unrealistic number) so handling multiple transformations of small arrays (the graph is stored in an adjacency list, or at least a forumlation of an adjacency list that encodes edge data in property key names themselves) in response to UI events is not seen as a performance killer.
-
-`current graph + change event = new graph`
+- **`minimizePanel`**: Takes the current `panelData` data structure, and a panel id of an existing panel in `panelData` and returns the next state of `panelData` with the corresponding panel "minimized". "Minimized" is defined as the panel removed from `panelData`, which means it's previous edge-based relationships are re-mapped correspondingly to it's former neighbors.

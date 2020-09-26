@@ -228,7 +228,6 @@ export const updateGraph = ( origGraph, changeEvent) => {
     return nextGraph
   }
   // TV only impact a minimal number of other nodes (since these edges will not be container-wide like horizontal edges)
-  // TODO: probably need more testing on vertical relationships
   if (edgeType === 'TV') {
     if (data.h + nodeData.y + nodeData.h < MINIMUM_THRESHOLD) {
       return nextGraph

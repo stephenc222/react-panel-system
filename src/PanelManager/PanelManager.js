@@ -8,10 +8,10 @@ export const PanelManager = ({
   panelComponents,
   panelData,
   onPanelDataChange,
-  leftEdgeClassname = 'panel-horizontal-edge--left',
-  rightEdgeClassname = 'panel-horizontal-edge--right',
-  topEdgeClassname = 'panel-vertical-edge--top',
-  bottomEdgeClassname  = 'panel-vertical-edge--bottom'
+  leftEdgeClassName = 'panel-horizontal-edge--left',
+  rightEdgeClassName = 'panel-horizontal-edge--right',
+  topEdgeClassName = 'panel-vertical-edge--top',
+  bottomEdgeClassName  = 'panel-vertical-edge--bottom'
 }) => {
   
   const panelManagerRef = useRef(null)
@@ -31,10 +31,10 @@ export const PanelManager = ({
       <Panel
         key={nodeId}
         nodeId={nodeId}
-        leftEdgeClassname={leftEdgeClassname}
-        rightEdgeClassname={rightEdgeClassname}
-        topEdgeClassname={topEdgeClassname}
-        bottomEdgeClassname={bottomEdgeClassname}
+        leftEdgeClassName={leftEdgeClassName}
+        rightEdgeClassName={rightEdgeClassName}
+        topEdgeClassName={topEdgeClassName}
+        bottomEdgeClassName={bottomEdgeClassName}
         {...panelChildData}
       >
         <PanelComponent/>
@@ -97,7 +97,6 @@ export const PanelManager = ({
         edgeType,
         data: {
           w: 0,
-          // TODO: further testing on vertical relationship-based transformations
           h: edgeType === 'BV' ? yDiff : yDiff,
         }
       }

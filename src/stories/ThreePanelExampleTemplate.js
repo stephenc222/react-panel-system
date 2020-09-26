@@ -17,8 +17,6 @@ const DUMMY_PANEL_DATA = {
   ]
 }
 
-// TODO: test with much, much more complex panel arrangements
-
 const PanelA = () => (<div style={{background: '#C23B23', display: 'flex', flexGrow: 1}}>Panel A</div>)
 const PanelB = () => (<div style={{background: '#03C03C', display: 'flex', flexGrow: 1}}>Panel B</div>)
 const PanelC = () => (<div style={{background: '#579ABE', display: 'flex', flexGrow: 1}}>Panel C</div>)
@@ -26,7 +24,6 @@ const PanelC = () => (<div style={{background: '#579ABE', display: 'flex', flexG
 function App() {
   const [panelData, setPanelData] = useState(DUMMY_PANEL_DATA)
   // used for "restore"
-  // TODO: integrate through an interface a component consuming the PanelManager can trigger
   const [panelDataContextCache, ] = useState(DUMMY_PANEL_DATA)
   const [panelIds, setPanelIds] = useState([])
 

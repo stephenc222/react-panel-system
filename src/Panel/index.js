@@ -13,10 +13,10 @@ const Panel = ({
   y,
   children,
   nodeId,
-  leftEdgeClassname,
-  rightEdgeClassname,
-  topEdgeClassname,
-  bottomEdgeClassname
+  leftEdgeClassName,
+  rightEdgeClassName,
+  topEdgeClassName,
+  bottomEdgeClassName
 }) => {
 
   const [, { setDraggingNode, setStartPos }] = useContext(PanelSystemContext)
@@ -38,7 +38,7 @@ const Panel = ({
       }}>
       <div
         onMouseDown={event => onMouseDown(event, 'LE')}
-        className={`${showEdge(x > 0.01, leftEdgeClassname )} panel-horizontal-edge`}
+        className={`${showEdge(x > 0.01, leftEdgeClassName )} panel-horizontal-edge`}
       />
         <div
           style={{
@@ -49,17 +49,17 @@ const Panel = ({
         >
           <div
             onMouseDown={event => onMouseDown(event, 'TV')}
-            className={`${showEdge(y > 0.01, topEdgeClassname )} panel-vertical-edge`}
+            className={`${showEdge(y > 0.01, topEdgeClassName )} panel-vertical-edge`}
           />
           {children}
           <div
             onMouseDown={event => onMouseDown(event, 'BV')}
-            className={`${showEdge(y === 0 && y + h <= 0.99, bottomEdgeClassname )} panel-vertical-edge`}
+            className={`${showEdge(y === 0 && y + h <= 0.99, bottomEdgeClassName )} panel-vertical-edge`}
           />
         </div>
       <div
         onMouseDown={event => onMouseDown(event, 'RE')}
-        className={`${showEdge(x + w <= 0.99, rightEdgeClassname )} panel-horizontal-edge`}
+        className={`${showEdge(x + w <= 0.99, rightEdgeClassName )} panel-horizontal-edge`}
       />
     </div>
   )
