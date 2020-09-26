@@ -1,8 +1,6 @@
 # React Panel System
 
-## Overview
-
-A system of UI Panels to enable Panels to be easily resizable, persistent and configurable.
+A system of resizable, persistent and configurable panels. Built with React.
 Demo [here](https://stephenc222.github.io/react-panel-system/).
 
 ## Quick Start
