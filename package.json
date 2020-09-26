@@ -68,5 +68,11 @@
   },
   "peerDependencies": {
     "react": "^16.13.1"
-  }
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "panel",
+    "panels"
+  ]
 }
