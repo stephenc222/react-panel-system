@@ -38,7 +38,7 @@ const Panel = ({
       }}>
       <div
         onMouseDown={event => onMouseDown(event, 'LE')}
-        className={`${showEdge(x !== 0, leftEdgeClassname )} panel-horizontal-edge`}
+        className={`${showEdge(x > 0.01, leftEdgeClassname )} panel-horizontal-edge`}
       />
         <div
           style={{
@@ -49,7 +49,7 @@ const Panel = ({
         >
           <div
             onMouseDown={event => onMouseDown(event, 'TV')}
-            className={`${showEdge(y !== 0, topEdgeClassname )} panel-vertical-edge`}
+            className={`${showEdge(y > 0.01, topEdgeClassname )} panel-vertical-edge`}
           />
           {children}
           <div
