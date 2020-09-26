@@ -5,10 +5,8 @@
   "main": "dist/index.js",
   "browser": "dist/index.js",
   "dependencies": {
-    "lodash": "^4.17.20",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "lodash.clonedeep": "^4.5.0",
+    "react": "^16.13.1"
   },
   "repository": {
     "type": "git",
@@ -57,7 +55,9 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "babel-loader": "^8.1.0",
+    "react-dom": "^16.13.1",
     "react-is": "^16.13.1",
+    "react-scripts": "3.4.3",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-embed-css": "^1.0.18",
@@ -67,7 +67,6 @@
     "rollup-plugin-peer-deps-external": "^2.2.3"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^16.13.1"
   }
 }

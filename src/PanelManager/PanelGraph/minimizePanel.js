@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from 'lodash.clonedeep'
 // minimize a panel
 // minimize panel is defined as removing a panel and remapping it's relationships
 
