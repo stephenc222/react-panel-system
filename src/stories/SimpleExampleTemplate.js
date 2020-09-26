@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PanelManager , { minimizePanel, maximizePanel} from '../index.js'
-import Select from './Select'
+import FloatingTestInputBox from './FloatingTestInputBox'
 import './App.css';
 
 // initial dummy panel data
@@ -41,30 +41,6 @@ function App() {
 
   return (
     <div className='App'>
-      <div style={{ zIndex: 2}}>
-        <Select
-          label="Panel Select"
-          placeholder="Pick some"
-          onValuesChange={ values => setPanelIds(values)}
-          options={[
-            { value: 'A' },
-            { value: 'B' },
-          ]}
-          multiple
-        />
-        <div style={{paddingTop: '0.5em'}}>
-          <button disabled={panelIds.length !== 1} onClick={onMaximize} style={{marginLeft: '1em', marginRight: '1em'}}>Maximize</button>
-          <button onClick={onMinimize} style={{marginLeft: '1em', marginRight: '1em'}}>Minimize</button>
-          <button onClick={onRestore} style={{marginLeft: '1em', marginRight: '1em'}}>Restore</button>
-        </div>
-      </div>
-      <span
-        style={{
-          paddingTop: '1em',
-          paddingBottom: '1em',
-        }}
-      >
-      </span>
       <div
         style={{
           display: 'flex',
@@ -76,6 +52,8 @@ function App() {
         }}
       > 
       <div
+        // only used for the FloatingTestInputBox. Not for the PanelManager
+        onDragOver={ event => event.preventDefault()}
         style={{
           display: 'flex',
           border: '1px solid darkblue',
@@ -93,6 +71,16 @@ function App() {
         />
       </div>
       </div>
+      <FloatingTestInputBox
+        panelIdOptions={
+          [{ value: 'A'}, {value: 'B'} ]
+        }
+        setPanelIds={setPanelIds}
+        onMaximize={onMaximize}
+        onMinimize={onMinimize}
+        onRestore={onRestore}
+        panelIds={panelIds}
+      />
     </div>
   );
 }
