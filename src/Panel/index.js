@@ -4,6 +4,9 @@ import './Panel.css'
 
 const showEdge = (isTrue, classname) => isTrue ? classname : ''
 
+// slight adjustment to clamp down on potential for an unsafe floating point number
+const adjPercent = num => (Math.trunc(num * 10**5) / 10**5 + 2/10**5) 
+
 // NOTE: the Drag API cannot be used if I want to set a cursor while "dragging"
 // must use mouse move, down and up to simulate drag
 const Panel = ({
@@ -31,10 +34,10 @@ const Panel = ({
       style={{
         display: 'flex',
         position: 'absolute',
-        width: `${w * 100}%`,
-        height: `${h * 100}%`,
-        top: `${y * 100}%`,
-        left: `${x * 100}%`,
+        width: `${adjPercent(w) * 100}%`,
+        height: `${adjPercent(h) * 100}%`,
+        top: `${adjPercent(y) * 100}%`,
+        left: `${adjPercent(x) * 100}%`,
       }}>
       <div
         onMouseDown={event => onMouseDown(event, 'LE')}

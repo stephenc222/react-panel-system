@@ -45,8 +45,8 @@ export const PanelManager = ({
   const onMouseMove = (event) => {
     event.preventDefault()
     const { width, height, x, y } = panelManagerRef.current.getBoundingClientRect()
-    const nextPanelWidthPercent = (event.pageX - x) / width
-    const nextPanelHeightPercent = (event.pageY - y) / height
+    const nextPanelWidthPercent = Math.trunc(((event.pageX - x) / width) * 10**5) / 10**5
+    const nextPanelHeightPercent = Math.trunc(((event.pageY - y) / height) * 10**5) / 10**5
     const { nodeId, edge: edgeType } = draggingNode
     if (nodeId === undefined) {
       return
