@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PanelManager, { minimizePanel, maximizePanel } from '../index.js'
-import FloatingTestInputBox from './FloatingTestInputBox'
+import FloatingTestInputBox from './components/FloatingTestInputBox'
 import './App.css';
 
 const DUMMY_PANEL_DATA_0 = {
@@ -19,20 +19,6 @@ const DUMMY_PANEL_DATA_0 = {
     { E: { re: [], le: ['B', 'C'], tv: ['C'], bv: [] } },
   ]
 }
-const DUMMY_PANEL_DATA_1 = {
-  data : {
-    A: { w: 0.5, h: 0.5, x: 0, y: 0 },
-    B: { w: 0.5, h: 0.5, x: 0.5, y: 0},
-    C: { w: 0.5, h: 0.5, x: 0, y: 0.5 },
-    D: { w: 0.5, h: 0.5, x: 0.5, y: 0.5 }
-  },
-  adjList: [
-    { A: { re: ['B','C', 'D' ], le: [], tv: [], bv: ['C' ] } },
-    { B: { le: ['A', 'C', 'D' ], re: [], tv: [], bv: ['D'] } },
-    { C: { re: ['D','B', 'A' ], le: [], tv: ['A'], bv: [] } },
-    { D: { le: ['B','C', 'A' ], re: [], tv: ['B'], bv: [] } },
-  ]
-}
 
 const PanelA = () => (<div style={{background: '#C23B23', display: 'flex', flexGrow: 1}}>Panel A</div>)
 const PanelB = () => (<div style={{background: '#03C03C', display: 'flex', flexGrow: 1}}>Panel B</div>)
@@ -42,7 +28,6 @@ const PanelE = () => (<div style={{background: '#F39A27', display: 'flex', flexG
 
 function App() {
   const [panelData0, setPanelData0 ] = useState(DUMMY_PANEL_DATA_0)
-  const [panelData1, setPanelData1 ] = useState(DUMMY_PANEL_DATA_1)
   // used for "restore"
   const [panelDataContextCache0, ] = useState(DUMMY_PANEL_DATA_0)
   const [panelIds, setPanelIds] = useState([])
@@ -60,28 +45,11 @@ function App() {
   }
 
   return (
-    <div className='App'>
+    <>
       <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          height: '90vh',
-          padding: '1em',
-          flexGrow: 1,
-          flexBasis: 1
-        }}
-      >
-      <div
-        // only used for the FloatingTestInputBox. Not for the PanelManager
+        className='App'
+        // Only used for the FloatingTestInputBox. Not for the PanelManager
         onDragOver={ event => event.preventDefault()}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flexGrow: 1,
-          flexBasis: 1,
-          height: '100%',
-          border: '1px solid darkblue'
-        }}
       >
         <PanelManager
           minimizedPanels={[]}
@@ -96,7 +64,6 @@ function App() {
           ]}
           panelData={panelData0}
         />
-        </div>
       </div>
       <FloatingTestInputBox
         setPanelIds={setPanelIds}
@@ -108,7 +75,7 @@ function App() {
           [{ value: 'A'}, {value: 'B'}, {value: 'C'}, {value: 'D'} ,{value: 'E'}]
         }
       />
-    </div>
+    </>
   );
 }
 

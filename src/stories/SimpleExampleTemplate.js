@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PanelManager , { minimizePanel, maximizePanel} from '../index.js'
-import FloatingTestInputBox from './FloatingTestInputBox'
+import FloatingTestInputBox from './components/FloatingTestInputBox'
 import './App.css';
 
 // initial dummy panel data
@@ -37,27 +37,12 @@ function App() {
   }
 
   return (
-    <div className='App'>
+    <>
       <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          height: '90vh',
-          flexGrow: 1,
-          padding: '1em',
-          flexBasis: 1
-        }}
-      > 
-      <div
-        // only used for the FloatingTestInputBox. Not for the PanelManager
+        className='App'
+        // Only used for the FloatingTestInputBox. Not for the PanelManager
         onDragOver={ event => event.preventDefault()}
-        style={{
-          display: 'flex',
-          border: '1px solid darkblue',
-          height: '100%',
-          width: '100%'
-        }}
-      >
+      > 
         <PanelManager
           onPanelDataChange={ nextPanelData => setPanelData(nextPanelData)}
           panelComponents={[
@@ -66,7 +51,6 @@ function App() {
           ]}
           panelData={panelData}
         />
-      </div>
       </div>
       <FloatingTestInputBox
         panelIdOptions={
@@ -78,7 +62,7 @@ function App() {
         onRestore={onRestore}
         panelIds={panelIds}
       />
-    </div>
+    </>
   );
 }
 

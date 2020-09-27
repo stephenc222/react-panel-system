@@ -1,0 +1,44 @@
+.floating-test-input-box-container {
+  position: absolute;
+  pointer-events: move;
+  background-color: white;
+  box-shadow: 2px 2px 5px black;
+  border-radius: 10px;
+  padding-left: 3em;
+  padding-top: 0.5em;
+  padding-right: 3em;
+  padding-bottom: 3em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.close-button {
+  cursor: pointer;
+  background-color: #ff342b;
+  color: pink;
+  font-weight: bold;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  border-radius: 5px;
+  margin-right: -1.5em;
+}
+
+.close-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-button-container {
+  padding-top: 2em;
+  display: flex;
+  height: 100%;
+}
+
+.action-button {
+  margin-left: 1em;
+  margin-right: 1em;
+}
