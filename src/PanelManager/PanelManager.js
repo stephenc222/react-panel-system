@@ -124,7 +124,6 @@ export const PanelManager = ({
         style={{
           display: 'flex',
           position: 'relative',
-          background: 'yellow',
           height: '100%',
           width: '100%',
           cursor: draggingNode
