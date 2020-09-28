@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PanelManager , { minimizePanel, maximizePanel} from '../index.js'
+import PanelManager , { minimizePanel, maximizePanel, Panel } from '../index.js'
 import FloatingTestInputBox from './components/FloatingTestInputBox'
 import './App.css';
 
@@ -45,12 +45,15 @@ function App() {
       > 
         <PanelManager
           onPanelDataChange={ nextPanelData => setPanelData(nextPanelData)}
-          panelComponents={[
-            {id: 'A', PanelComponent: PanelA},
-            {id: 'B', PanelComponent: PanelB},
-          ]}
           panelData={panelData}
-        />
+        >
+          <Panel panelId='A'>
+            <PanelA/>
+          </Panel>
+          <Panel panelId='B'>
+            <PanelB/>
+          </Panel>
+        </PanelManager>
       </div>
       <FloatingTestInputBox
         panelIdOptions={

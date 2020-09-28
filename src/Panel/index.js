@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { PanelSystemContext } from '../context'
 import './Panel.css'
 
@@ -9,26 +9,35 @@ const adjPercent = num => (Math.trunc(num * 10**5) / 10**5 + 2/10**5)
 
 // NOTE: the Drag API cannot be used if I want to set a cursor while "dragging"
 // must use mouse move, down and up to simulate drag
-const Panel = ({
-  w,
-  h,
-  x,
-  y,
-  children,
-  nodeId,
-  leftEdgeClassName,
-  rightEdgeClassName,
-  topEdgeClassName,
-  bottomEdgeClassName
-}) => {
+class Panel extends React.Component {
 
-  const [, { setDraggingNode, setStartPos }] = useContext(PanelSystemContext)
-
-
-  const onMouseDown = (event, edge) => {
-    setDraggingNode({ nodeId, edge})
-    setStartPos({ startX: event.pageX, startY: event.pageY })
+  constructor(props) {
+    super(props)
+    this.onMouseDown = this.onMouseDown.bind(this)
   }
+  onMouseDown (event, edge) {
+    const [,actions] = this.context
+    actions.setDraggingNode({ nodeId: this.props.nodeId, edge })
+    actions.setStartPos({ startX: event.pageX, startY: event.pageY })
+  }
+
+  render() {
+  const  {
+    w,
+    h,
+    x,
+    y,
+    children,
+    leftEdgeClassName,
+    rightEdgeClassName,
+    topEdgeClassName,
+    bottomEdgeClassName,
+    onMouseMove,
+    onMouseUp,
+  } = this.props
+
+  const [{ draggingNode }] = this.context
+
   return (
     <div
       style={{
@@ -40,7 +49,7 @@ const Panel = ({
         left: `${adjPercent(x) * 100}%`,
       }}>
       <div
-        onMouseDown={event => onMouseDown(event, 'LE')}
+        onMouseDown={event => this.onMouseDown(event, 'LE')}
         className={`${showEdge(x > 0.01, leftEdgeClassName )} panel-horizontal-edge`}
       />
         <div
@@ -50,22 +59,51 @@ const Panel = ({
             flexGrow: 1
           }}
         >
+          {/*
+            "mask" used to prevent mouse events from being blocked by drag events from children,
+            while allowing those same mouse events to be utilized in "onMouseMove" and "onMouseUp"
+          */}
           <div
-            onMouseDown={event => onMouseDown(event, 'TV')}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            style={{
+              position: 'fixed',
+              display: draggingNode ? '' : 'none',
+              zIndex: 9999,
+              opacity: 0,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          />
+          <div
+            onMouseDown={event => this.onMouseDown(event, 'TV')}
             className={`${showEdge(y > 0.01, topEdgeClassName )} panel-vertical-edge`}
           />
-          {children}
+          {
+            React.Children.map(children, child => {
+              return React.cloneElement(child, {
+                ref: child.ref,
+                ...child.props,
+              })
+            })
+          }
           <div
-            onMouseDown={event => onMouseDown(event, 'BV')}
+            onMouseDown={event => this.onMouseDown(event, 'BV')}
             className={`${showEdge(y === 0 && y + h <= 0.99, bottomEdgeClassName )} panel-vertical-edge`}
           />
         </div>
       <div
-        onMouseDown={event => onMouseDown(event, 'RE')}
+        onMouseDown={event => this.onMouseDown(event, 'RE')}
         className={`${showEdge(x + w <= 0.99, rightEdgeClassName )} panel-horizontal-edge`}
       />
     </div>
   )
 }
 
+}
+
+
+Panel.contextType = PanelSystemContext
 export default Panel
