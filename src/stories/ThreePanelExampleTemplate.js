@@ -4,7 +4,7 @@ import FloatingTestInputBox from './components/FloatingTestInputBox'
 import './App.css';
 
 // initial dummy panel data
-const DUMMY_PANEL_DATA = {
+const DUMMY_PANEL_DATA = [{
   data : {
     A: { w: 0.33333, h: 1.0, x: 0, y: 0 },
     B: { w: 0.33333, h: 1.0, x: 0.33333, y: 0},
@@ -15,7 +15,7 @@ const DUMMY_PANEL_DATA = {
     { B: { le: ['A',], re: ['C'], tv: [], bv: [] } },
     { C: { le: ['B',], re: [], tv: [], bv: [] } },
   ]
-}
+}]
 
 const PanelA = () => (<div style={{background: '#C23B23', display: 'flex', flexGrow: 1}}>Panel A</div>)
 const PanelB = () => (<div style={{background: '#03C03C', display: 'flex', flexGrow: 1}}>Panel B</div>)
@@ -28,7 +28,7 @@ function App() {
   const [panelIds, setPanelIds] = useState([])
 
   const onMaximize= () => {
-    const nextGraph = maximizePanel(panelData, panelIds)
+    const nextGraph = maximizePanel(panelIds)
     setPanelData(nextGraph)
   }
   const onMinimize = () => {

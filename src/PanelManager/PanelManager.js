@@ -20,7 +20,7 @@ class PanelManager extends React.Component {
   }
 
   updatePanelDataContext (changeEvent) {
-    const nextPanelDataContext = updateGraph(this.props.panelData, changeEvent)
+    const nextPanelDataContext = this.props.panelData.map( panelDataItem => updateGraph(panelDataItem, changeEvent))
     this.props.onPanelDataChange && this.props.onPanelDataChange(nextPanelDataContext)
   }
   setDraggingNode(draggingNode) {
@@ -42,10 +42,14 @@ class PanelManager extends React.Component {
       return
     }
     const { panelData } = this.props
+    const { nodeId, edge: edgeType } = this.state.draggingNode
+    const panelDataLayer = panelData.find( panelDataItem => Object.keys(panelDataItem.data).includes(nodeId))
+    const currentWidthPercent = panelDataLayer.data[nodeId].w 
+    const currentXPercent = panelDataLayer.data[nodeId].x
+    const currentHeightPercent = panelDataLayer.data[nodeId].h
     const { width, height, x, y } = this.panelManagerRef.current.getBoundingClientRect()
     const nextPanelWidthPercent = Math.trunc(((event.pageX - x) / width) * 10**5) / 10**5
     const nextPanelHeightPercent = Math.trunc(((event.pageY - y) / height) * 10**5) / 10**5
-    const { nodeId, edge: edgeType } = this.state.draggingNode
     if (nodeId === undefined) {
       return
     }
@@ -58,8 +62,6 @@ class PanelManager extends React.Component {
       if (nextPanelWidthPercent === 0 || isNaN(nextPanelWidthPercent)) {
         return
       }
-      const currentWidthPercent = panelData.data[nodeId].w 
-      const currentXPercent = panelData.data[nodeId].x
       const xDiff = edgeType === 'RE'
         ? nextPanelWidthPercent - currentWidthPercent - currentXPercent
         : currentXPercent - nextPanelWidthPercent
@@ -83,7 +85,6 @@ class PanelManager extends React.Component {
       if (nextPanelHeightPercent === 0 || isNaN(nextPanelHeightPercent)) {
         return
       }
-      const currentHeightPercent = panelData.data[nodeId].h
       const diffChange = nextPanelHeightPercent - currentHeightPercent
       const yDiff = edgeType === 'BV'
         ? diffChange
@@ -105,7 +106,7 @@ class PanelManager extends React.Component {
   render() {
     const {
       children,
-      panelData,
+      panelData = [],
       leftEdgeClassName = 'panel-horizontal-edge--left',
       rightEdgeClassName = 'panel-horizontal-edge--right',
       topEdgeClassName = 'panel-vertical-edge--top',
@@ -137,23 +138,25 @@ class PanelManager extends React.Component {
           }}
         >
           {
-            React.Children.map(children, child => {
-              const { panelId } = (child.props || {})
-              const panelChildData = panelData.data[panelId]
-              // panel either doesn't exist or has been "minimized"
-              if (!panelChildData) {
-                return null
-              }
-              return React.cloneElement(child, {
-                bottomEdgeClassName,
-                topEdgeClassName,
-                leftEdgeClassName,
-                rightEdgeClassName,
-                nodeId: panelId,
-                onMouseMove: this.onMouseMove,
-                onMouseUp: this.onMouseUp,
-                ...child.props,
-                ...panelChildData
+            panelData.map( panelDataItem => {
+              return React.Children.map(children, child => {
+                const { panelId } = (child.props || {})
+                const panelChildData = panelDataItem.data[panelId]
+                // panel either doesn't exist or has been "minimized"
+                if (!panelChildData) {
+                  return null
+                }
+                return React.cloneElement(child, {
+                  bottomEdgeClassName,
+                  topEdgeClassName,
+                  leftEdgeClassName,
+                  rightEdgeClassName,
+                  nodeId: panelId,
+                  onMouseMove: this.onMouseMove,
+                  onMouseUp: this.onMouseUp,
+                  ...child.props,
+                  ...panelChildData
+                })
               })
             })
           }

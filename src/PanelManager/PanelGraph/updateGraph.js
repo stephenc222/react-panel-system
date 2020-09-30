@@ -111,6 +111,10 @@ export const updateGraph = ( origGraph, changeEvent) => {
   // first, update the node that changed
   const nextGraph = cloneDeep(origGraph)
   const nodeData = nextGraph.data[nodeId]
+  if (!nodeData) {
+    return nextGraph
+  }
+  const panelIds = Object.keys(nextGraph.data) 
   // BV means these nodes will have a height change and y change
   const bvRelatedNodes = nextGraph.adjList.find( node =>
     Object.keys(node)[0] === nodeId )[nodeId].bv || []
@@ -156,6 +160,15 @@ export const updateGraph = ( origGraph, changeEvent) => {
       const relatedNode = nextGraph.data[nodeId] 
       return relatedNode.w - data.w < MINIMUM_THRESHOLD && !bvRelatedNodes.includes(nodeId) && !tvRelatedNodes.includes(nodeId)
     })
+    // these are nodes that are not directly related (share a direct edge) but exist with an x greater than the current node's x + width
+    for (let i = 0; i < panelIds.length; ++i) {
+      const panelData= nextGraph.data[panelIds[i]]
+      if (panelData.x >= nodeData.x + nodeData.w) {
+        if (nodeData.x + nodeData.w + data.w > panelData.x && !reRelatedNodes.length) {
+          return nextGraph
+        }
+      }
+    }
     if ( nextGraph.data[nodeId].w + data.w < MINIMUM_THRESHOLD || tooSmallREOnlySmallNodes.length) {
       for (let i = 0; i < reRelatedNodes.length; ++i) {
         const relatedNode = nextGraph.data[reRelatedNodes[i]]
@@ -202,6 +215,16 @@ export const updateGraph = ( origGraph, changeEvent) => {
       const relatedNode = nextGraph.data[nodeId] 
       return relatedNode.w - data.w < MINIMUM_THRESHOLD && !bvRelatedNodes.includes(nodeId) && !tvRelatedNodes.includes(nodeId)
     })
+    // these are nodes that are not directly related (share a direct edge) but exist with an x less than the current node's x + width
+    // or an x less than the current node's x
+    for (let i = 0; i < panelIds.length; ++i) {
+      const panelData= nextGraph.data[panelIds[i]]
+      if (nodeData.x >= panelData.x + panelData.w) {
+        if (nodeData.x - data.w < panelData.x + panelData.w && !leRelatedNodes.length) {
+          return nextGraph
+        }
+      }
+    }
     if ( nextGraph.data[nodeId].w + data.w < MINIMUM_THRESHOLD || tooSmallLEOnlySmallNodes.length) {
       for (let i = 0; i < leRelatedNodes.length; ++i) {
         const relatedNode = nextGraph.data[leRelatedNodes[i]]

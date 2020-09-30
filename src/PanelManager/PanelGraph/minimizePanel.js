@@ -2,8 +2,8 @@ import cloneDeep from 'lodash.clonedeep'
 // minimize a panel
 // minimize panel is defined as removing a panel and remapping it's relationships
 
-export const minimizePanel = (origGraph, nodeIds = []) => {
-  const nextGraph = cloneDeep(origGraph)
+export const minimizePanel = (origGraphArr, nodeIds = []) => {
+  const nextGraphArr = cloneDeep(origGraphArr)
   // if there is only one node in the graph, minimize does nothing
   // if node has a TV or BV relationship, then this node to remove will give it's whole height 
   // to the TV (or BV if no TV) and it's BV will now become a BV node of the node above it that it 
@@ -11,6 +11,10 @@ export const minimizePanel = (origGraph, nodeIds = []) => {
   // TV means these nodes will only have a height change and no y change
   // "minimize" "one at a time"
   nodeIds.forEach (nodeId => {
+    const nextGraph = nextGraphArr.find( nextGraphItem => Object.keys(nextGraphItem.data).includes(nodeId))
+    if (!nextGraph) {
+      return
+    }
     const reRelatedNodes = nextGraph.adjList.find( node => 
       Object.keys(node)[0] === nodeId )[nodeId].re || []
     // LE means these related nodes will have only a width and no x change
@@ -114,5 +118,5 @@ export const minimizePanel = (origGraph, nodeIds = []) => {
     })
     delete nextGraph.data[nodeId]
   })
-  return nextGraph
+  return nextGraphArr
 }
