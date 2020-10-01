@@ -2,20 +2,34 @@ import React from 'react'
 import { PanelSystemContext } from '../context'
 import './Panel.css'
 
-const showEdge = (isTrue, classname) => isTrue ? classname : ''
+const showEdge = (isTrue: boolean, classname: string) => isTrue ? classname : ''
 
 // slight adjustment to clamp down on potential for an unsafe floating point number
-const adjPercent = num => (Math.trunc(num * 10**5) / 10**5 + 2/10**5) 
+const adjPercent = (num: number) => (Math.trunc(num * 10**5) / 10**5 + 2/10**5) 
+
+interface PanelProps {
+  nodeId: string
+  w: number
+  h: number
+  x: number
+  y: number
+  leftEdgeClassName?: string
+  rightEdgeClassName?: string
+  topEdgeClassName?: string
+  bottomEdgeClassName?: string
+  onMouseMove:  (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onMouseUp: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+}
 
 // NOTE: the Drag API cannot be used if I want to set a cursor while "dragging"
 // must use mouse move, down and up to simulate drag
-class Panel extends React.Component {
+class Panel extends React.Component<PanelProps> {
 
-  constructor(props) {
+  constructor(props: PanelProps) {
     super(props)
     this.onMouseDown = this.onMouseDown.bind(this)
   }
-  onMouseDown (event, edge) {
+  onMouseDown (event: React.MouseEvent<HTMLDivElement, MouseEvent>, edge: string) {
     const [,actions] = this.context
     actions.setDraggingNode({ nodeId: this.props.nodeId, edge })
     actions.setStartPos({ startX: event.pageX, startY: event.pageY })
@@ -81,14 +95,7 @@ class Panel extends React.Component {
             onMouseDown={event => this.onMouseDown(event, 'TV')}
             className={`${showEdge(y > 0.01, topEdgeClassName )} panel-vertical-edge`}
           />
-          {
-            React.Children.map(children, child => {
-              return React.cloneElement(child, {
-                ref: child.ref,
-                ...child.props,
-              })
-            })
-          }
+          {children}
           <div
             onMouseDown={event => this.onMouseDown(event, 'BV')}
             className={`${showEdge(y === 0 && y + h <= 0.99, bottomEdgeClassName )} panel-vertical-edge`}

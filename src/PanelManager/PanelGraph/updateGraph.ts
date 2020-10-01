@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash.clonedeep'
+import { PanelChangeEvent, PanelGraph } from '../../types'
 
 /* 
  * Manages panel graph data structure
@@ -104,9 +105,8 @@ import cloneDeep from 'lodash.clonedeep'
 
 const MINIMUM_THRESHOLD = 0.05
 const MAXIMUM_THRESHOLD = 0.95
-// to enable "docking"
-// FIXME: consider rework of update based on relationship
-export const updateGraph = ( origGraph, changeEvent) => {
+// TODO: consider rework of update based on relationship to enable "docking"
+export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEvent): PanelGraph => {
   const { nodeId, data, edgeType } = changeEvent
   // first, update the node that changed
   const nextGraph = cloneDeep(origGraph)

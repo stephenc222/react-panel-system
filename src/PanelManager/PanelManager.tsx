@@ -1,41 +1,57 @@
-import React from 'react'
-import { updateGraph } from './PanelGraph'
+import React, { createRef } from 'react'
+import { updateGraph } from './PanelGraph/index'
 import { PanelSystemContext } from '../context'
+import { PanelGraph, PanelChangeEvent } from '../types'
 
-const getPercentChange = (previous, current) => ((current - previous) / previous * 100) / 100
+const getPercentChange = (previous: number, current: number) => ((current - previous) / previous * 100) / 100
 
-class PanelManager extends React.Component {
-  constructor() {
-    super()
+
+export interface PanelManagerProps {
+  onPanelDataChange: (panelDataContext: PanelGraph[]) => void
+  panelData: PanelGraph[]
+  leftEdgeClassName?: string
+  rightEdgeClassName?: string
+  topEdgeClassName?: string
+  bottomEdgeClassName?: string
+}
+
+interface PanelManagerState {
+  startPos: { startX: number, startY: number }
+  draggingNode: { edge: string, nodeId: string } | null
+}
+
+class PanelManager extends React.Component<PanelManagerProps, PanelManagerState> {
+  constructor(props: PanelManagerProps) {
+    super(props)
     this.updatePanelDataContext = this.updatePanelDataContext.bind(this)
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseUp = this.onMouseUp.bind(this)
     this.setDraggingNode = this.setDraggingNode.bind(this)
     this.setStartPos= this.setStartPos.bind(this)
-    this.panelManagerRef = React.createRef();
     this.state = {
-      startPos: {},
+      startPos: { startX: null, startY: null },
       draggingNode: null
     }
   }
+  private panelManagerRef = createRef<HTMLDivElement>()
 
-  updatePanelDataContext (changeEvent) {
+  updatePanelDataContext (changeEvent: PanelChangeEvent) {
     const nextPanelDataContext = this.props.panelData.map( panelDataItem => updateGraph(panelDataItem, changeEvent))
     this.props.onPanelDataChange && this.props.onPanelDataChange(nextPanelDataContext)
   }
-  setDraggingNode(draggingNode) {
+  setDraggingNode(draggingNode: PanelManagerState['draggingNode']) {
     this.setState({ draggingNode })
   }
-  setStartPos(startPos) {
+  setStartPos(startPos: PanelManagerState['startPos']) {
     this.setState({ startPos })
   }
-  onMouseUp(event)  {
+  onMouseUp(event: MouseEvent)  {
     event.stopPropagation()
     this.setDraggingNode(null)
-    this.setStartPos({})
+    this.setStartPos({ startX: null, startY: null })
   }
 
-  onMouseMove (event) {
+  onMouseMove (event: MouseEvent) {
     event.preventDefault()
     event.stopPropagation()
     if (!this.state.draggingNode) {
@@ -65,7 +81,7 @@ class PanelManager extends React.Component {
       const xDiff = edgeType === 'RE'
         ? nextPanelWidthPercent - currentWidthPercent - currentXPercent
         : currentXPercent - nextPanelWidthPercent
-      const changeEvent = {
+      const changeEvent: PanelChangeEvent = {
         nodeId,
         edgeType,
         data: {
@@ -89,7 +105,7 @@ class PanelManager extends React.Component {
       const yDiff = edgeType === 'BV'
         ? diffChange
         : nextPanelHeightPercent
-      const changeEvent = {
+      const changeEvent: PanelChangeEvent = {
         nodeId,
         edgeType,
         data: {
@@ -140,23 +156,25 @@ class PanelManager extends React.Component {
           {
             panelData.map( panelDataItem => {
               return React.Children.map(children, child => {
-                const { panelId } = (child.props || {})
-                const panelChildData = panelDataItem.data[panelId]
-                // panel either doesn't exist or has been "minimized"
-                if (!panelChildData) {
-                  return null
+                if (React.isValidElement(child)) {
+                  const { panelId } = (child.props || {})
+                  const panelChildData = panelDataItem.data[panelId]
+                  // panel either doesn't exist or has been "minimized"
+                  if (!panelChildData) {
+                    return null
+                  }
+                  return React.cloneElement(child, {
+                    bottomEdgeClassName,
+                    topEdgeClassName,
+                    leftEdgeClassName,
+                    rightEdgeClassName,
+                    nodeId: panelId,
+                    onMouseMove: this.onMouseMove,
+                    onMouseUp: this.onMouseUp,
+                    ...child.props,
+                    ...panelChildData
+                  })
                 }
-                return React.cloneElement(child, {
-                  bottomEdgeClassName,
-                  topEdgeClassName,
-                  leftEdgeClassName,
-                  rightEdgeClassName,
-                  nodeId: panelId,
-                  onMouseMove: this.onMouseMove,
-                  onMouseUp: this.onMouseUp,
-                  ...child.props,
-                  ...panelChildData
-                })
               })
             })
           }

@@ -1,22 +1,26 @@
-import commonjs from 'rollup-plugin-commonjs'
 import babel from '@rollup/plugin-babel'
 import external from 'rollup-plugin-peer-deps-external'
-import resolve from 'rollup-plugin-node-resolve'
+import peerDepsExternal from "rollup-plugin-peer-deps-external"
+import resolve from "@rollup/plugin-node-resolve"
+import commonjs from "@rollup/plugin-commonjs"
+import typescript from "rollup-plugin-typescript2"
 import css from 'rollup-plugin-merge-and-inject-css'
-
-
 import pkg from './package.json'
 
 export default {
   external: ['react', 'react-dom'],
-  input: 'src/index.js',
+  input: 'src/index.ts',
   output: [
     {
-      file: pkg.browser,
-      format: 'cjs',
+      file: pkg.main,
+      format: "cjs",
       exports: 'named',
-      sourcemap: true
     },
+    {
+      file: pkg.module,
+      format: "esm",
+      exports: 'named',
+    }
   ],
   plugins: [
     external({
@@ -27,6 +31,8 @@ export default {
       id: 'react-panel-system'
     }),
     resolve(),
+    peerDepsExternal(),
+    typescript({ useTsconfigDeclarationDir: true }),
     babel({
       babelHelpers: 'bundled',
       exclude: 'node_modules/**',

@@ -1,9 +1,10 @@
 import cloneDeep from 'lodash.clonedeep'
-// minimize a panel
-// minimize panel is defined as removing a panel and remapping it's relationships
+import { PanelGraph } from '../../types'
 
-export const minimizePanel = (origGraphArr, nodeIds = []) => {
-  const nextGraphArr = cloneDeep(origGraphArr)
+const THOUSAND: number = 1000
+
+export const minimizePanel = (origGraphArr: PanelGraph[], nodeIds: string[] = []): PanelGraph[] => {
+  const nextGraphArr: PanelGraph[] = cloneDeep(origGraphArr)
   // if there is only one node in the graph, minimize does nothing
   // if node has a TV or BV relationship, then this node to remove will give it's whole height 
   // to the TV (or BV if no TV) and it's BV will now become a BV node of the node above it that it 
@@ -50,29 +51,23 @@ export const minimizePanel = (origGraphArr, nodeIds = []) => {
       }
     })
     if (tvRelatedNodes.length) {
-      // NOTE: assumes only 1 BV or TV directly related node
-      const tvNodeId = tvRelatedNodes[0]
-      const tvNodeData = nextGraph.data[tvNodeId]
-      const currentNodeData = nextGraph.data[nodeId]
-      const bvNodeData = nextGraph.data[tvNodeId]
-      // "current" H is added to BV
-      // update data, then update resulting relationships
-      bvNodeData.h = tvNodeData.h + currentNodeData.h
-      // bvNodeData.y = currentNodeData.y 
+      tvRelatedNodes.forEach( tvNodeId => {
+        const currentNodeData = nextGraph.data[nodeId]
+        const tvNodeData = nextGraph.data[tvNodeId]
+        tvNodeData.h = tvNodeData.h + currentNodeData.h
+        nextGraph.data[tvNodeId] = tvNodeData
+      })
       delete nextGraph.data[nodeId]
-      nextGraph.data[tvNodeId] = tvNodeData
       return nextGraph
     } else if (bvRelatedNodes.length) {
-      // NOTE: assumes only 1 BV or TV directly related node
-      const bvNodeId = bvRelatedNodes[0]
-      const currentNodeData = nextGraph.data[nodeId]
-      const bvNodeData = nextGraph.data[bvNodeId]
-      // "current" H is added to BV
-      // update data, then update resulting relationships
-      bvNodeData.h = bvNodeData.h + currentNodeData.h
-      bvNodeData.y = currentNodeData.y 
+      bvRelatedNodes.forEach( bvNodeId => {
+        const currentNodeData = nextGraph.data[nodeId]
+        const bvNodeData = nextGraph.data[bvNodeId]
+        bvNodeData.h = bvNodeData.h + currentNodeData.h
+        bvNodeData.y = currentNodeData.y 
+        nextGraph.data[bvNodeId] = bvNodeData
+      })
       delete nextGraph.data[nodeId]
-      nextGraph.data[bvNodeId] = bvNodeData
       return nextGraph
     }
     // for LE nodes, add to their width 1/2 the width of this node (this node is assumed to be full height)
@@ -81,9 +76,9 @@ export const minimizePanel = (origGraphArr, nodeIds = []) => {
       const leNodeData = nextGraph.data[leNodeId]
       // if none, no space to share
       if (!reRelatedNodes.length) {
-        leNodeData.w = leNodeData.w + Math.floor((nextGraph.data[nodeId].w) * 1000) / 1000
+        leNodeData.w = leNodeData.w + Math.floor((nextGraph.data[nodeId].w) * THOUSAND) / THOUSAND
       } else {
-        leNodeData.w = leNodeData.w + Math.floor((nextGraph.data[nodeId].w / 2) * 1000) / 1000
+        leNodeData.w = leNodeData.w + Math.floor((nextGraph.data[nodeId].w / 2) * THOUSAND) / THOUSAND 
       }
       // for every LE node, every RE node of the removed node is now an RE node of this LE node
       // nextGraph.adjList
@@ -101,11 +96,11 @@ export const minimizePanel = (origGraphArr, nodeIds = []) => {
       const reNodeData = nextGraph.data[reNodeId]
       // if none, no space to share
       if (!leRelatedNodes.length) {
-        reNodeData.w = reNodeData.w + Math.floor((nextGraph.data[nodeId].w) * 1000) / 1000
-        reNodeData.x = reNodeData.x - Math.floor((nextGraph.data[nodeId].w ) * 1000) / 1000
+        reNodeData.w = reNodeData.w + Math.floor((nextGraph.data[nodeId].w) * THOUSAND) / THOUSAND
+        reNodeData.x = reNodeData.x - Math.floor((nextGraph.data[nodeId].w ) * THOUSAND) / THOUSAND
       } else {
-        reNodeData.w = reNodeData.w + Math.floor((nextGraph.data[nodeId].w / 2) * 1000) / 1000
-        reNodeData.x = reNodeData.x - Math.floor((nextGraph.data[nodeId].w / 2) * 1000) / 1000
+        reNodeData.w = reNodeData.w + Math.floor((nextGraph.data[nodeId].w / 2) * THOUSAND) / THOUSAND
+        reNodeData.x = reNodeData.x - Math.floor((nextGraph.data[nodeId].w / 2) * THOUSAND) / THOUSAND
       }
       // for every RE node, every LE node of the removed node is now an LE node of this LE node
       const currentLENodeAdjListIndex = nextGraph.adjList.findIndex( adjListItem => Object.keys(adjListItem)[0] === reNodeId)

@@ -1,8 +1,6 @@
-// maximize a panel
-// maximize a panel is defined as removing all other panels and remapping it's relationships
-// Mazimizing prevents any drag and drop
+import { PanelGraph } from "../../types"
 
-export const maximizePanel = (panelNodeId) => {
+export const maximizePanel = (panelNodeId: string | string[]): PanelGraph[] => {
   let panelNodeIdStr = ''
   // assumes that only one panel could be "maximized", and that "maximized" means bring to the
   // forefront of a user's attention, with full width and height
@@ -14,7 +12,7 @@ export const maximizePanel = (panelNodeId) => {
     throw new Error(`unknown type passed for panelNodeId: ${panelNodeId}`)
   }
   
-  const newGraph = [{
+  const newGraphArr: PanelGraph[] = [{
     adjList: [{
       [panelNodeIdStr]: { re: [], le: [], tv: [], bv: [] }
     }],
@@ -29,5 +27,5 @@ export const maximizePanel = (panelNodeId) => {
   }]
   // remove all edge relationships
   // set x and y to (0,0) w and h to 1 each
-  return newGraph
+  return newGraphArr;
 }

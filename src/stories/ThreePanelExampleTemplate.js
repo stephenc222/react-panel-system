@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PanelManager, { minimizePanel, maximizePanel, Panel } from '../index.js'
+import PanelManager, { minimizePanel, maximizePanel, Panel } from '../index.ts'
 import FloatingTestInputBox from './components/FloatingTestInputBox'
 import './App.css';
 
@@ -43,7 +43,7 @@ function App() {
     <>
       <div
         className='App'
-        // Only used for the FloatingTestInputBox. Not for the PanelManager
+        // NOTE: Only used for the FloatingTestInputBox. Not for the PanelManager
         onDragOver={ event => event.preventDefault()}
       > 
         <PanelManager
