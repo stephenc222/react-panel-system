@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PanelManager, { minimizePanel, maximizePanel, Panel } from '../index.ts'
+import PanelManager, { minimizePanel, maximizePanel, Panel } from '../src/index.ts'
 import FloatingTestInputBox from './components/FloatingTestInputBox'
 import './App.css';
 
