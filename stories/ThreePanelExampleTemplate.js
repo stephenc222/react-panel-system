@@ -1,45 +1,23 @@
 import React, { useState } from 'react';
-import PanelManager , { minimizePanel, maximizePanel, Panel } from '../index.ts'
+import PanelManager, { minimizePanel, maximizePanel, Panel } from '../src/index.ts'
 import FloatingTestInputBox from './components/FloatingTestInputBox'
 import './App.css';
 
 // initial dummy panel data
 const DUMMY_PANEL_DATA = [{
   data : {
-    A: { w: 1.0, h: 1.0, x: 0, y: 0 },
+    A: { w: 0.33333, h: 1.0, x: 0, y: 0 },
+    B: { w: 0.33333, h: 1.0, x: 0.33333, y: 0},
+    C: { w: 0.33333, h: 1.0, x: 0.66666, y: 0},
   },
   adjList: [
-    { A: { re: [], le: [], tv: [], bv: [] } },
-  ]
-}, {
-  data : {
-    B: { w: 0.25, h: 1.0, x: 0, y: 0 },
-    C: { w: 0.25, h: 1.0, x: 0.75, y: 0},
-  },
-  adjList: [
-    { B: { re: [], le: [], tv: [], bv: [] } },
-    { C: { le: [], re: [], tv: [], bv: [] } },
+    { A: { re: ['B'], le: [], tv: [], bv: [] } },
+    { B: { le: ['A',], re: ['C'], tv: [], bv: [] } },
+    { C: { le: ['B',], re: [], tv: [], bv: [] } },
   ]
 }]
 
-const PanelA = () => (
-  <div
-    style={{
-      background: '#C23B23',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      textAlign: 'center',
-      width: '100%',
-      justifyContent: 'space-between',
-      alignItems: 'space-between'
-    }}
-  >
-    <span>Panel A</span>
-    <div>This panel is rendered first</div>
-    <div/>
-  </div>
-)
+const PanelA = () => (<div style={{background: '#C23B23', display: 'flex', flexGrow: 1}}>Panel A</div>)
 const PanelB = () => (<div style={{background: '#03C03C', display: 'flex', flexGrow: 1}}>Panel B</div>)
 const PanelC = () => (<div style={{background: '#579ABE', display: 'flex', flexGrow: 1}}>Panel C</div>)
 
@@ -70,6 +48,11 @@ function App() {
       > 
         <PanelManager
           onPanelDataChange={ nextPanelData => setPanelData(nextPanelData)}
+          panelComponents={[
+            {id: 'A', PanelComponent: PanelA},
+            {id: 'B', PanelComponent: PanelB},
+            {id: 'C', PanelComponent: PanelC},
+          ]}
           panelData={panelData}
         >
           <Panel panelId='A'>
@@ -84,14 +67,14 @@ function App() {
         </PanelManager>
       </div>
       <FloatingTestInputBox
-        panelIdOptions={
-          [{ value: 'A'}, {value: 'B'}, {value: 'C'} ]
-        }
         setPanelIds={setPanelIds}
         onMaximize={onMaximize}
         onMinimize={onMinimize}
         onRestore={onRestore}
         panelIds={panelIds}
+        panelIdOptions={
+          [{ value: 'A'},{ value: 'B'}, {value: 'C'} ]
+        }
       />
     </>
   );
