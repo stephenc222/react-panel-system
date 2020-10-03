@@ -1,5 +1,12 @@
 # React Panel System
 
+![NPM version](https://img.shields.io/npm/v/react-panel-system.svg?style=flat)
+![NPM license](https://img.shields.io/npm/l/react-panel-system.svg?style=flat)
+[![NPM total downloads](https://img.shields.io/npm/dt/react-panel-system.svg?style=flat)](https://npmcharts.com/compare/react-panel-system?minimal=true)
+[![NPM monthly downloads](https://img.shields.io/npm/dm/react-panel-system.svg?style=flat)](https://npmcharts.com/compare/react-panel-system?minimal=true)
+[![stephenc222](https://circleci.com/gh/stephenc222/react-panel-system.svg?style=shield)](https://app.circleci.com/pipelines/github/stephenc222)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
 A system of resizable, persistent and configurable panels. Built with React.
 
 Demo [here](https://stephenc222.github.io/react-panel-system/).
