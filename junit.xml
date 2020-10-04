@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="2" failures="0" time="1.83">
-  <testsuite name="Panel" errors="0" failures="0" skipped="0" timestamp="2020-10-04T03:51:13" time="1.02" tests="1">
-    <testcase classname="Panel renders" name="Panel renders" time="0.018">
+<testsuites name="jest tests" tests="8" failures="0" time="2.301">
+  <testsuite name="Panel" errors="0" failures="0" skipped="0" timestamp="2020-10-04T22:40:23" time="1.009" tests="1">
+    <testcase classname="Panel renders" name="Panel renders" time="0.017">
     </testcase>
   </testsuite>
-  <testsuite name="PanelManager" errors="0" failures="0" skipped="0" timestamp="2020-10-04T03:51:14" time="0.209" tests="1">
+  <testsuite name="PanelManager" errors="0" failures="0" skipped="0" timestamp="2020-10-04T22:40:24" time="0.203" tests="1">
     <testcase classname="PanelManager renders a panel layout of one panel, full height and width" name="PanelManager renders a panel layout of one panel, full height and width" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="minimizePanel" errors="0" failures="0" skipped="0" timestamp="2020-10-04T22:40:24" time="0.229" tests="3">
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" time="0.002">
+    </testcase>
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A" name="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A" time="0.001">
+    </testcase>
+    <testcase classname="minimizePanel returns the original panel data if nodeIds is empty" name="minimizePanel returns the original panel data if nodeIds is empty" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="updateGraph" errors="0" failures="0" skipped="0" timestamp="2020-10-04T22:40:24" time="0.115" tests="1">
+    <testcase classname="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" name="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="maximizePanel" errors="0" failures="0" skipped="0" timestamp="2020-10-04T22:40:24" time="0.11" tests="2">
+    <testcase classname="maximizePanel returns the expected PanelGraph array data structure" name="maximizePanel returns the expected PanelGraph array data structure" time="0">
+    </testcase>
+    <testcase classname="maximizePanel throws if panelNodeId is null" name="maximizePanel throws if panelNodeId is null" time="0.001">
     </testcase>
   </testsuite>
 </testsuites>

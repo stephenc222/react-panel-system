@@ -5,6 +5,9 @@ const THOUSAND: number = 1000
 
 export const minimizePanel = (origGraphArr: PanelGraph[], nodeIds: string[] = []): PanelGraph[] => {
   const nextGraphArr: PanelGraph[] = cloneDeep(origGraphArr)
+  if (!nodeIds.length) {
+    return nextGraphArr
+  }
   // if there is only one node in the graph, minimize does nothing
   // if node has a TV or BV relationship, then this node to remove will give it's whole height 
   // to the TV (or BV if no TV) and it's BV will now become a BV node of the node above it that it 

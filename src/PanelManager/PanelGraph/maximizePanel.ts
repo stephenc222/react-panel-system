@@ -1,23 +1,17 @@
 import { PanelGraph } from "../../types"
 
-export const maximizePanel = (panelNodeId: string | string[]): PanelGraph[] => {
-  let panelNodeIdStr = ''
+export const maximizePanel = (panelNodeId: string): PanelGraph[] => {
   // assumes that only one panel could be "maximized", and that "maximized" means bring to the
   // forefront of a user's attention, with full width and height
-  if (Array.isArray(panelNodeId)) {
-    panelNodeIdStr = panelNodeId[0]
-  } else if (typeof panelNodeId === 'string') {
-    panelNodeIdStr = panelNodeId
-  } else {
-    throw new Error(`unknown type passed for panelNodeId: ${panelNodeId}`)
+  if (!panelNodeId) {
+    throw new Error('panelNodeId is required')
   }
-  
   const newGraphArr: PanelGraph[] = [{
     adjList: [{
-      [panelNodeIdStr]: { re: [], le: [], tv: [], bv: [] }
+      [panelNodeId]: { re: [], le: [], tv: [], bv: [] }
     }],
     data: {
-      [panelNodeIdStr]: {
+      [panelNodeId]: {
         x: 0,
         y: 0,
         w: 1,
