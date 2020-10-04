@@ -13,9 +13,10 @@
     "noImplicitAny": false,
     "removeComments": true,
     "preserveConstEnums": true,
+    "types": ["cypress", "@testing-library/cypress"],
     "sourceMap": true,
     "jsx": "react"
-  },
+  }, 
   "include": ["src/**/*", "stories"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts", "__tests__/*"]
 }

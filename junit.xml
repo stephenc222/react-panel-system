@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="1" failures="0" time="2.28">
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2020-10-03T21:24:52" time="1.097" tests="1">
-    <testcase classname=" stub" name=" stub" time="0.004">
+<testsuites name="jest tests" tests="2" failures="0" time="1.83">
+  <testsuite name="Panel" errors="0" failures="0" skipped="0" timestamp="2020-10-04T03:51:13" time="1.02" tests="1">
+    <testcase classname="Panel renders" name="Panel renders" time="0.018">
+    </testcase>
+  </testsuite>
+  <testsuite name="PanelManager" errors="0" failures="0" skipped="0" timestamp="2020-10-04T03:51:14" time="0.209" tests="1">
+    <testcase classname="PanelManager renders a panel layout of one panel, full height and width" name="PanelManager renders a panel layout of one panel, full height and width" time="0.002">
     </testcase>
   </testsuite>
 </testsuites>
