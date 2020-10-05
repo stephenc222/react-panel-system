@@ -1,5 +1,4 @@
 import React from 'react'
-import { PanelSystemContext } from '../context'
 import './Panel.css'
 
 const showEdge = (isTrue: boolean, classname: string) => isTrue ? classname : ''
@@ -8,7 +7,7 @@ const showEdge = (isTrue: boolean, classname: string) => isTrue ? classname : ''
 const adjPercent = (num: number) => (Math.trunc(num * 10**5) / 10**5 + 2/10**5) 
 
 interface PanelProps {
-  nodeId: string
+  panelId: string
   w: number
   h: number
   x: number
@@ -18,7 +17,9 @@ interface PanelProps {
   topEdgeClassName?: string
   bottomEdgeClassName?: string
   onMouseMove:  (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onMouseDown:  (event: React.MouseEvent<HTMLDivElement, MouseEvent>, panelId: string, edge: string) => void
   onMouseUp: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  draggingNode?: object
 }
 
 // NOTE: the Drag API cannot be used if I want to set a cursor while "dragging"
@@ -27,12 +28,6 @@ class Panel extends React.Component<PanelProps> {
 
   constructor(props: PanelProps) {
     super(props)
-    this.onMouseDown = this.onMouseDown.bind(this)
-  }
-  onMouseDown (event: React.MouseEvent<HTMLDivElement, MouseEvent>, edge: string) {
-    const [,actions] = this.context
-    actions.setDraggingNode({ nodeId: this.props.nodeId, edge })
-    actions.setStartPos({ startX: event.pageX, startY: event.pageY })
   }
 
   render() {
@@ -47,10 +42,11 @@ class Panel extends React.Component<PanelProps> {
       topEdgeClassName,
       bottomEdgeClassName,
       onMouseMove,
+      onMouseDown,
       onMouseUp,
+      panelId,
+      draggingNode
     } = this.props
-
-    const [{ draggingNode }] = this.context
 
     return (
       <div
@@ -63,7 +59,7 @@ class Panel extends React.Component<PanelProps> {
           left: `${adjPercent(x) * 100}%`,
         }}>
         <div
-          onMouseDown={event => this.onMouseDown(event, 'LE')}
+          onMouseDown={event => onMouseDown(event, panelId, 'LE')}
           className={`${showEdge(x > 0.01, leftEdgeClassName )} panel-horizontal-edge`}
         />
           <div
@@ -92,25 +88,22 @@ class Panel extends React.Component<PanelProps> {
               }}
             />
             <div
-              onMouseDown={event => this.onMouseDown(event, 'TV')}
+              onMouseDown={event => onMouseDown(event, panelId, 'TV')}
               className={`${showEdge(y > 0.01, topEdgeClassName )} panel-vertical-edge`}
             />
             {children}
             <div
-              onMouseDown={event => this.onMouseDown(event, 'BV')}
+              onMouseDown={event => onMouseDown(event, panelId, 'BV')}
               className={`${showEdge(y === 0 && y + h <= 0.99, bottomEdgeClassName )} panel-vertical-edge`}
             />
           </div>
         <div
-          onMouseDown={event => this.onMouseDown(event, 'RE')}
+          onMouseDown={event => onMouseDown(event, panelId, 'RE')}
           className={`${showEdge(x + w <= 0.99, rightEdgeClassName )} panel-horizontal-edge`}
         />
       </div>
     )
   }
-
 }
 
-
-Panel.contextType = PanelSystemContext
 export default Panel

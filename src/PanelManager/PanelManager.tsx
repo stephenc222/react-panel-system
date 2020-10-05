@@ -1,10 +1,8 @@
 import React, { createRef } from 'react'
 import { updateGraph } from './PanelGraph/index'
-import { PanelSystemContext } from '../context'
 import { PanelGraph, PanelChangeEvent } from '../types'
 
 const getPercentChange = (previous: number, current: number) => ((current - previous) / previous * 100) / 100
-
 
 export interface PanelManagerProps {
   onPanelDataChange: (panelDataContext: PanelGraph[]) => void
@@ -23,11 +21,12 @@ interface PanelManagerState {
 class PanelManager extends React.Component<PanelManagerProps, PanelManagerState> {
   constructor(props: PanelManagerProps) {
     super(props)
-    this.updatePanelDataContext = this.updatePanelDataContext.bind(this)
+    this.updatePanelData = this.updatePanelData.bind(this)
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseUp = this.onMouseUp.bind(this)
     this.setDraggingNode = this.setDraggingNode.bind(this)
     this.setStartPos= this.setStartPos.bind(this)
+    this.onMouseDown = this.onMouseDown.bind(this)
     this.state = {
       startPos: { startX: null, startY: null },
       draggingNode: null
@@ -35,9 +34,13 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
   }
   private panelManagerRef = createRef<HTMLDivElement>()
 
-  updatePanelDataContext (changeEvent: PanelChangeEvent) {
-    const nextPanelDataContext = this.props.panelData.map( panelDataItem => updateGraph(panelDataItem, changeEvent))
-    this.props.onPanelDataChange && this.props.onPanelDataChange(nextPanelDataContext)
+  onMouseDown (event: React.MouseEvent<HTMLDivElement, MouseEvent>, panelId: string, edge: string) {
+    this.setDraggingNode({ nodeId: panelId, edge })
+    this.setStartPos({ startX: event.pageX, startY: event.pageY })
+  }
+  updatePanelData (changeEvent: PanelChangeEvent) {
+    const nextPanelData = this.props.panelData.map( panelDataItem => updateGraph(panelDataItem, changeEvent))
+    this.props.onPanelDataChange && this.props.onPanelDataChange(nextPanelData)
   }
   setDraggingNode(draggingNode: PanelManagerState['draggingNode']) {
     this.setState({ draggingNode })
@@ -89,7 +92,7 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
           h: 0
         }
       }
-      this.updatePanelDataContext(changeEvent)
+      this.updatePanelData(changeEvent)
       this.setStartPos({ startX: event.pageX, startY: event.pageY})
       return
     }
@@ -113,7 +116,7 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
           h: edgeType === 'BV' ? yDiff : yDiff,
         }
       }
-      this.updatePanelDataContext(changeEvent)
+      this.updatePanelData(changeEvent)
       this.setStartPos({ startX: event.pageX, startY: event.pageY})
       return
     }
@@ -131,59 +134,54 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
     const {
       draggingNode
     } = this.state
-
-    const panelManagerContext = [{panelDataContext: panelData, draggingNode}, { updatePanelDataContext: this.updatePanelDataContext, setDraggingNode: this.setDraggingNode, setStartPos: this.setStartPos }]
     return (
-      <PanelSystemContext.Provider value={panelManagerContext}>
-        <div
-          ref={this.panelManagerRef}
-          style={{
-            display: 'flex',
-            position: 'relative',
-            height: '100%',
-            width: '100%',
-            cursor: draggingNode
-              && draggingNode.edge 
-              && (draggingNode.edge === 'LE' || draggingNode.edge === 'RE')
-                ? 'col-resize' 
-                : draggingNode
-                  && draggingNode.edge
-                  && (draggingNode.edge === 'TV' || draggingNode.edge === 'BV')
-                    ? 'row-resize'
-                    : ''
-          }}
-        >
-          {
-            panelData.map( panelDataItem => {
-              return React.Children.map(children, child => {
-                if (React.isValidElement(child)) {
-                  const { panelId } = (child.props || {})
-                  const panelChildData = panelDataItem.data[panelId]
-                  // panel either doesn't exist or has been "minimized"
-                  if (!panelChildData) {
-                    return null
-                  }
-                  return React.cloneElement(child, {
-                    bottomEdgeClassName,
-                    topEdgeClassName,
-                    leftEdgeClassName,
-                    rightEdgeClassName,
-                    nodeId: panelId,
-                    onMouseMove: this.onMouseMove,
-                    onMouseUp: this.onMouseUp,
-                    ...child.props,
-                    ...panelChildData
-                  })
+      <div
+        ref={this.panelManagerRef}
+        style={{
+          display: 'flex',
+          position: 'relative',
+          height: '100%',
+          width: '100%',
+          cursor: draggingNode
+            && draggingNode.edge 
+            && (draggingNode.edge === 'LE' || draggingNode.edge === 'RE')
+              ? 'col-resize' 
+              : draggingNode
+                && draggingNode.edge
+                && (draggingNode.edge === 'TV' || draggingNode.edge === 'BV')
+                  ? 'row-resize'
+                  : ''
+        }}
+      >
+        {
+          panelData.map( panelDataItem => {
+            return React.Children.map(children, child => {
+              if (React.isValidElement(child)) {
+                const { panelId } = (child.props || {})
+                const panelChildData = panelDataItem.data[panelId]
+                // panel either doesn't exist or has been "minimized"
+                if (!panelChildData) {
+                  return null
                 }
-              })
+                return React.cloneElement(child, {
+                  bottomEdgeClassName,
+                  topEdgeClassName,
+                  leftEdgeClassName,
+                  rightEdgeClassName,
+                  onMouseMove: this.onMouseMove,
+                  onMouseUp: this.onMouseUp,
+                  onMouseDown: this.onMouseDown,
+                  draggingNode,
+                  ...child.props,
+                  ...panelChildData
+                })
+              }
             })
-          }
-        </div>
-      </PanelSystemContext.Provider>
+          })
+        }
+      </div>
     ) 
   }
 }
-
-PanelManager.contextType = PanelSystemContext
 
 export default PanelManager
