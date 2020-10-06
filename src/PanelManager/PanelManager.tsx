@@ -1,6 +1,6 @@
 import React, { createRef } from 'react'
 import { updateGraph } from './PanelGraph/index'
-import { PanelGraph, PanelChangeEvent } from '../types'
+import { PanelGraph, PanelChangeEvent, PanelDraggingNode } from '../types'
 
 const getPercentChange = (previous: number, current: number) => ((current - previous) / previous * 100) / 100
 
@@ -15,7 +15,7 @@ export interface PanelManagerProps {
 
 interface PanelManagerState {
   startPos: { startX: number, startY: number }
-  draggingNode: { edge: string, nodeId: string } | null
+  draggingNode: PanelDraggingNode
 }
 
 class PanelManager extends React.Component<PanelManagerProps, PanelManagerState> {
@@ -42,7 +42,7 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
     const nextPanelData = this.props.panelData.map( panelDataItem => updateGraph(panelDataItem, changeEvent))
     this.props.onPanelDataChange && this.props.onPanelDataChange(nextPanelData)
   }
-  setDraggingNode(draggingNode: PanelManagerState['draggingNode']) {
+  setDraggingNode(draggingNode: PanelDraggingNode) {
     this.setState({ draggingNode })
   }
   setStartPos(startPos: PanelManagerState['startPos']) {
@@ -113,7 +113,7 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
         edgeType,
         data: {
           w: 0,
-          h: edgeType === 'BV' ? yDiff : yDiff,
+          h: yDiff,
         }
       }
       this.updatePanelData(changeEvent)

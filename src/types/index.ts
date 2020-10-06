@@ -20,3 +20,8 @@ export interface PanelChangeEvent {
   edgeType: string
   data: { w: number, h: number }
 }
+
+export interface PanelDraggingNode {
+  edge: string
+  nodeId: string
+}
