@@ -24,8 +24,6 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
     this.updatePanelData = this.updatePanelData.bind(this)
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseUp = this.onMouseUp.bind(this)
-    this.setDraggingNode = this.setDraggingNode.bind(this)
-    this.setStartPos= this.setStartPos.bind(this)
     this.onMouseDown = this.onMouseDown.bind(this)
     this.state = {
       startPos: { startX: null, startY: null },
@@ -35,23 +33,21 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
   private panelManagerRef = createRef<HTMLDivElement>()
 
   onMouseDown (event: React.MouseEvent<HTMLDivElement, MouseEvent>, panelId: string, edge: string) {
-    this.setDraggingNode({ nodeId: panelId, edge })
-    this.setStartPos({ startX: event.pageX, startY: event.pageY })
+    this.setState({
+      startPos: { startX: event.pageX, startY: event.pageY },
+      draggingNode: { nodeId: panelId, edge }
+    })
   }
   updatePanelData (changeEvent: PanelChangeEvent) {
     const nextPanelData = this.props.panelData.map( panelDataItem => updateGraph(panelDataItem, changeEvent))
     this.props.onPanelDataChange && this.props.onPanelDataChange(nextPanelData)
   }
-  setDraggingNode(draggingNode: PanelDraggingNode) {
-    this.setState({ draggingNode })
-  }
-  setStartPos(startPos: PanelManagerState['startPos']) {
-    this.setState({ startPos })
-  }
   onMouseUp(event: MouseEvent)  {
     event.stopPropagation()
-    this.setDraggingNode(null)
-    this.setStartPos({ startX: null, startY: null })
+    this.setState({
+      startPos: { startX: null , startY: null },
+      draggingNode: null
+    })
   }
 
   onMouseMove (event: MouseEvent) {
@@ -93,7 +89,7 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
         }
       }
       this.updatePanelData(changeEvent)
-      this.setStartPos({ startX: event.pageX, startY: event.pageY})
+      this.setState({ startPos: { startX: event.pageX, startY: event.pageY } })
       return
     }
     if (edgeType === 'TV' || edgeType === 'BV') {
@@ -117,7 +113,7 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
         }
       }
       this.updatePanelData(changeEvent)
-      this.setStartPos({ startX: event.pageX, startY: event.pageY})
+      this.setState({ startPos: { startX: event.pageX, startY: event.pageY } })
       return
     }
   }
