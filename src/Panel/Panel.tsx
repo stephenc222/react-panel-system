@@ -46,6 +46,7 @@ const Panel: React.FunctionComponent<PanelProps> = (props) => {
 
   return (
     <div
+      data-testid={`panel__${panelId}`}
       style={{
         display: 'flex',
         position: 'absolute',
@@ -55,6 +56,7 @@ const Panel: React.FunctionComponent<PanelProps> = (props) => {
         left: `${adjPercent(x) * 100}%`,
       }}>
       <div
+        data-testid={`panel__${panelId}__le`}
         onMouseDown={event => onMouseDown(event, panelId, 'LE')}
         className={`${showEdge(x > 0.01, leftEdgeClassName )} panel-horizontal-edge`}
       />
@@ -69,12 +71,13 @@ const Panel: React.FunctionComponent<PanelProps> = (props) => {
             "mask" used to prevent mouse events from being blocked by drag events from children,
             while allowing those same mouse events to be utilized in "onMouseMove" and "onMouseUp"
           */}
-          <div
+          <div 
+            data-testid={`panel__${panelId}__mask`}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
             style={{
               position: 'fixed',
-              display: draggingNode ? '' : 'none',
+              display: draggingNode && draggingNode.nodeId === panelId ? '' : 'none',
               zIndex: 9999,
               opacity: 0,
               top: 0,
@@ -84,16 +87,19 @@ const Panel: React.FunctionComponent<PanelProps> = (props) => {
             }}
           />
           <div
+            data-testid={`panel__${panelId}__tv`}
             onMouseDown={event => onMouseDown(event, panelId, 'TV')}
             className={`${showEdge(y > 0.01, topEdgeClassName )} panel-vertical-edge`}
           />
           {children}
           <div
+            data-testid={`panel__${panelId}__bv`}
             onMouseDown={event => onMouseDown(event, panelId, 'BV')}
             className={`${showEdge(y === 0 && y + h <= 0.99, bottomEdgeClassName )} panel-vertical-edge`}
           />
         </div>
       <div
+        data-testid={`panel__${panelId}__re`}
         onMouseDown={event => onMouseDown(event, panelId, 'RE')}
         className={`${showEdge(x + w <= 0.99, rightEdgeClassName )} panel-horizontal-edge`}
       />

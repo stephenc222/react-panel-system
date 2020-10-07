@@ -1,5 +1,5 @@
-import React from 'react'
-import { render, fireEvent, waitFor, screen } from '@testing-library/react'
+import React, { useState } from 'react'
+import { render, fireEvent, waitFor, screen, getByTestId, getByText } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import PanelManager from '../../src/PanelManager'
 import Panel from '../../src/Panel'
@@ -41,5 +41,60 @@ describe('PanelManager', () => {
         <Panel panelId='A' {...internallyCreatedAndPassedPanelProps} />
       </PanelManager>
     )
+  })
+  it('changes PanelA\'s width from mousedown on panel edge and mousemove on panel mask', () => {
+    const testPanelData = [{
+      data: {
+        A: { x: 0, y: 0, w: 0.5, h: 1 },
+        B: { x: 0.5, y: 0, w: 0.5, h: 1 }
+      },
+      adjList: [{
+        A: { re: ['B'], le: [], tv: [], bv: [] },
+        B: { re: [], le: ['A'], tv: [], bv: [] }
+      }]
+    }]
+    const PanelA = () => (<div style={{background: '#C23B23', display: 'flex', flexGrow: 1}}>Panel A</div>)
+    const PanelB = () => (<div style={{background: '#03C03C', display: 'flex', flexGrow: 1}}>Panel B</div>)
+    const TestApp = () => {
+      const [panelData, setPanelData] = useState(testPanelData)
+    
+      return (
+        <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          height: '90vh',
+          padding: '1em'
+        }}
+      > 
+        <PanelManager
+          // @ts-expect-error
+          onPanelDataChange={ nextPanelData => setPanelData(nextPanelData)}
+          panelData={panelData}
+        >
+          {/** @ts-expect-error */} 
+          <Panel panelId='A'>
+            <PanelA/>
+          </Panel>
+          {/** @ts-expect-error */} 
+          <Panel panelId='B'>
+            <PanelB/>
+          </Panel>
+        </PanelManager>
+      </div>
+      )
+    }
+    const { getByTestId } = render(<TestApp/>)
+    const testPanelAContainer = getByTestId('panel__A')
+    // default JSDOM window width is 1024, and height is 768
+    const startWidthInPixels = parseFloat(testPanelAContainer.style.width.replace('%','')) / 100 * 1024
+    const testPanelAHorizontalRightEdge = getByTestId('panel__A__re')
+    const testPanelAMask = getByTestId('panel__A__mask')
+    // mouse down
+    fireEvent.mouseDown(testPanelAHorizontalRightEdge)
+    // then mouse move
+    fireEvent.mouseMove(testPanelAMask, { clientX: startWidthInPixels * 0.8, clientY: 768 / 2 })
+    // then inspect panel for expected position change
+    expect(testPanelAContainer.style.width).toEqual('39.943%')
   })
 })

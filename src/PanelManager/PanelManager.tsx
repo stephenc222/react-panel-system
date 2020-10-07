@@ -33,8 +33,9 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
   private panelManagerRef = createRef<HTMLDivElement>()
 
   onMouseDown (event: React.MouseEvent<HTMLDivElement, MouseEvent>, panelId: string, edge: string) {
+    const { pageX = event.clientX, pageY = event.clientY } = event
     this.setState({
-      startPos: { startX: event.pageX, startY: event.pageY },
+      startPos: { startX: pageX, startY: pageY },
       draggingNode: { nodeId: panelId, edge }
     })
   }
@@ -51,6 +52,9 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
   }
 
   onMouseMove (event: MouseEvent) {
+    // NOTE: prefer pageX and pageY values, will "work fine" if panel layout
+    // is just full screen if need to fallback to clientX and clientY
+    const { pageX = event.clientX, pageY = event.clientY } = event
     event.preventDefault()
     event.stopPropagation()
     if (!this.state.draggingNode) {
@@ -62,15 +66,23 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
     const currentWidthPercent = panelDataLayer.data[nodeId].w 
     const currentXPercent = panelDataLayer.data[nodeId].x
     const currentHeightPercent = panelDataLayer.data[nodeId].h
-    const { width, height, x, y } = this.panelManagerRef.current.getBoundingClientRect()
-    const nextPanelWidthPercent = Math.trunc(((event.pageX - x) / width) * 10**5) / 10**5
-    const nextPanelHeightPercent = Math.trunc(((event.pageY - y) / height) * 10**5) / 10**5
+    // if these are not found on the panel manager ref, assume non-user environment,
+    // like JSDOM, and assume PanelManager will take the full screen
+    const rect = this.panelManagerRef.current.getBoundingClientRect()
+    // a non-mounted ref has defaults of "0" which prevents destructuring with defaults
+    // in a test environment like JSDOM, default to the window dimensions
+    const width = rect.width || window.innerWidth
+    const height = rect.height || window.innerWidth
+    const x = rect.x || 0
+    const y = rect.y || 0
+    const nextPanelWidthPercent = Math.trunc(((pageX - x) / width) * 10**5) / 10**5
+    const nextPanelHeightPercent = Math.trunc(((pageY - y) / height) * 10**5) / 10**5
     if (nodeId === undefined) {
       return
     }
     const { startX, startY } = this.state.startPos
     if (edgeType === 'LE' || edgeType === 'RE') {
-      const changeX = edgeType === 'RE' ? getPercentChange(startX, event.pageX) : getPercentChange(event.pageX, startX)
+      const changeX = edgeType === 'RE' ? getPercentChange(startX, pageX) : getPercentChange(pageX, startX)
       if (isNaN(changeX) || changeX === 0) {
         return
       }
@@ -89,11 +101,11 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
         }
       }
       this.updatePanelData(changeEvent)
-      this.setState({ startPos: { startX: event.pageX, startY: event.pageY } })
+      this.setState({ startPos: { startX: pageX, startY: pageY } })
       return
     }
     if (edgeType === 'TV' || edgeType === 'BV') {
-      const changeY = edgeType === 'BV' ? getPercentChange(startY, event.pageY) : getPercentChange(event.pageY, startY)  
+      const changeY = edgeType === 'BV' ? getPercentChange(startY, pageY) : getPercentChange(pageY, startY)  
       if (isNaN(changeY) || changeY === 0) {
         return
       }
@@ -113,7 +125,7 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
         }
       }
       this.updatePanelData(changeEvent)
-      this.setState({ startPos: { startX: event.pageX, startY: event.pageY } })
+      this.setState({ startPos: { startX: pageX, startY: pageY } })
       return
     }
   }
