@@ -1,41 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="26" failures="0" time="4.434">
-  <testsuite name="minimizePanel" errors="0" failures="0" skipped="0" timestamp="2020-10-08T03:18:39" time="1.278" tests="8">
-    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" time="0.004">
+<testsuites name="jest tests" tests="28" failures="0" time="3.319">
+  <testsuite name="updateGraph" errors="0" failures="0" skipped="0" timestamp="2020-10-08T18:24:46" time="1.353" tests="11">
+    <testcase classname="updateGraph should return the same graph if edgeType isn&apos;t recognized" name="updateGraph should return the same graph if edgeType isn&apos;t recognized" time="0.005">
     </testcase>
-    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A and C" name="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A and C" time="0.001">
-    </testcase>
-    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with bottom edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with bottom edge relationship to B" time="0">
-    </testcase>
-    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with top edge relationship to A" name="minimizePanel returns the expected PanelGraph array data structure removing B with top edge relationship to A" time="0.001">
-    </testcase>
-    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A, and has a right edge to C" name="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A, and has a right edge to C" time="0">
-    </testcase>
-    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A" name="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A" time="0.001">
-    </testcase>
-    <testcase classname="minimizePanel returns the original panel data if nodeIds is empty" name="minimizePanel returns the original panel data if nodeIds is empty" time="0">
-    </testcase>
-    <testcase classname="minimizePanel throws if a PanelGraph object does not contain the requested nodes to minimize" name="minimizePanel throws if a PanelGraph object does not contain the requested nodes to minimize" time="0.008">
-    </testcase>
-  </testsuite>
-  <testsuite name="Panel" errors="0" failures="0" skipped="0" timestamp="2020-10-08T03:18:40" time="0.963" tests="4">
-    <testcase classname="Panel renders" name="Panel renders" time="0.015">
-    </testcase>
-    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;left edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;left edge&quot;" time="0.012">
-    </testcase>
-    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;top edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;top edge&quot;" time="0.003">
-    </testcase>
-    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;bottom edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;bottom edge&quot;" time="0.003">
-    </testcase>
-  </testsuite>
-  <testsuite name="updateGraph" errors="0" failures="0" skipped="0" timestamp="2020-10-08T03:18:41" time="0.666" tests="9">
-    <testcase classname="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" name="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" time="0.001">
+    <testcase classname="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" name="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" time="0">
     </testcase>
     <testcase classname="updateGraph should return an expected new graph with 1% width decrease from left edge of panel B" name="updateGraph should return an expected new graph with 1% width decrease from left edge of panel B" time="0.001">
     </testcase>
     <testcase classname="updateGraph should return an expected new graph with 1% width increase from right edge of panel A" name="updateGraph should return an expected new graph with 1% width increase from right edge of panel A" time="0.001">
     </testcase>
-    <testcase classname="updateGraph should return an expected new graph with 1% height increase from top edge of panel B" name="updateGraph should return an expected new graph with 1% height increase from top edge of panel B" time="0">
+    <testcase classname="updateGraph should return an expected new graph with 1% height increase from top edge of panel B with panel A above and panel C below" name="updateGraph should return an expected new graph with 1% height increase from top edge of panel B with panel A above and panel C below" time="0">
+    </testcase>
+    <testcase classname="updateGraph should return an expected new graph with 1% height increase from top edge of panel B" name="updateGraph should return an expected new graph with 1% height increase from top edge of panel B" time="0.001">
     </testcase>
     <testcase classname="updateGraph should return an expected new graph with 1% height decrease from bottom edge of panel A" name="updateGraph should return an expected new graph with 1% height decrease from bottom edge of panel A" time="0.001">
     </testcase>
@@ -48,16 +24,44 @@
     <testcase classname="updateGraph should return the same graph due to a right edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a right edge-based change that would violate the minimum threshold for a panel size" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="PanelManager" errors="0" failures="0" skipped="0" timestamp="2020-10-08T03:18:42" time="0.235" tests="3">
-    <testcase classname="PanelManager renders null if no children passed" name="PanelManager renders null if no children passed" time="0.004">
+  <testsuite name="Panel" errors="0" failures="0" skipped="0" timestamp="2020-10-08T18:24:48" time="0.845" tests="4">
+    <testcase classname="Panel renders" name="Panel renders" time="0.017">
     </testcase>
-    <testcase classname="PanelManager renders a panel layout of one panel" name="PanelManager renders a panel layout of one panel" time="0.004">
+    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;left edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;left edge&quot;" time="0.014">
     </testcase>
-    <testcase classname="PanelManager changes PanelA&apos;s width from mousedown on panel edge and mousemove on panel mask" name="PanelManager changes PanelA&apos;s width from mousedown on panel edge and mousemove on panel mask" time="0.016">
+    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;top edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;top edge&quot;" time="0.003">
+    </testcase>
+    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;bottom edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;bottom edge&quot;" time="0.003">
     </testcase>
   </testsuite>
-  <testsuite name="maximizePanel" errors="0" failures="0" skipped="0" timestamp="2020-10-08T03:18:42" time="0.091" tests="2">
-    <testcase classname="maximizePanel returns the expected PanelGraph array data structure" name="maximizePanel returns the expected PanelGraph array data structure" time="0">
+  <testsuite name="PanelManager" errors="0" failures="0" skipped="0" timestamp="2020-10-08T18:24:48" time="0.239" tests="3">
+    <testcase classname="PanelManager renders null if no children passed" name="PanelManager renders null if no children passed" time="0.003">
+    </testcase>
+    <testcase classname="PanelManager renders a panel layout of one panel" name="PanelManager renders a panel layout of one panel" time="0.005">
+    </testcase>
+    <testcase classname="PanelManager changes PanelA&apos;s width from mousedown on panel edge and mousemove on panel mask" name="PanelManager changes PanelA&apos;s width from mousedown on panel edge and mousemove on panel mask" time="0.017">
+    </testcase>
+  </testsuite>
+  <testsuite name="minimizePanel" errors="0" failures="0" skipped="0" timestamp="2020-10-08T18:24:49" time="0.12" tests="8">
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" time="0.002">
+    </testcase>
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A and C" name="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A and C" time="0.001">
+    </testcase>
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with bottom edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with bottom edge relationship to B" time="0">
+    </testcase>
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with top edge relationship to A" name="minimizePanel returns the expected PanelGraph array data structure removing B with top edge relationship to A" time="0.001">
+    </testcase>
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A, and has a right edge to C" name="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A, and has a right edge to C" time="0.001">
+    </testcase>
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A" name="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A" time="0">
+    </testcase>
+    <testcase classname="minimizePanel returns the original panel data if nodeIds is empty" name="minimizePanel returns the original panel data if nodeIds is empty" time="0.001">
+    </testcase>
+    <testcase classname="minimizePanel throws if a PanelGraph object does not contain the requested nodes to minimize" name="minimizePanel throws if a PanelGraph object does not contain the requested nodes to minimize" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="maximizePanel" errors="0" failures="0" skipped="0" timestamp="2020-10-08T18:24:49" time="0.094" tests="2">
+    <testcase classname="maximizePanel returns the expected PanelGraph array data structure" name="maximizePanel returns the expected PanelGraph array data structure" time="0.001">
     </testcase>
     <testcase classname="maximizePanel throws if panelNodeId is null" name="maximizePanel throws if panelNodeId is null" time="0.002">
     </testcase>

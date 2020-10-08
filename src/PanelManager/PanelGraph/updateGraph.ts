@@ -108,7 +108,6 @@ const MAXIMUM_THRESHOLD = 0.95
 // TODO: consider rework of update based on relationship to enable "docking"
 export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEvent): PanelGraph => {
   const { nodeId, data, edgeType } = changeEvent
-  // first, update the node that changed
   const nextGraph = cloneDeep(origGraph)
   const nodeData = nextGraph.data[nodeId]
   if (!nodeData) {
@@ -119,18 +118,31 @@ export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEven
     Object.keys(node)[0] === nodeId )[nodeId].bv || []
 
   if (edgeType === 'BV') {
-    if (nextGraph.data[nodeId].y + nextGraph.data[nodeId].h === 1) {
+    const prevY = nextGraph.data[nodeId].y
+    const yDiff = data.h - prevY
+    if (data.h + nodeData.y + nodeData.h < MINIMUM_THRESHOLD) {
       return nextGraph
     }
-    if (nodeData.y + nodeData.h + data.h < MINIMUM_THRESHOLD || nodeData.y + nodeData.h + data.h > MAXIMUM_THRESHOLD) {
+    if ( yDiff < MINIMUM_THRESHOLD) {
       return nextGraph
     }
-    nextGraph.data[nodeId].h = nodeData.h + data.h
+
+    if (nextGraph.data[nodeId].y + yDiff > MAXIMUM_THRESHOLD) {
+      return nextGraph
+    }
+    const tooSmallBVOnlySmallNodes = bvRelatedNodes.filter( bvNodeId => {
+      const relatedNode = nextGraph.data[bvNodeId] 
+      return relatedNode.h < MINIMUM_THRESHOLD && data.h > nextGraph.data[nodeId].h
+    })
+    if (tooSmallBVOnlySmallNodes.length) {
+      return nextGraph
+    }
+    nextGraph.data[nodeId].h = data.h - nextGraph.data[nodeId].y
     bvRelatedNodes.forEach( relatedNodeId => {
-      // it's height changes, and the offset for the related node
-      const relatedNodeHeight = nextGraph.data[relatedNodeId].h
-      nextGraph.data[relatedNodeId].h = relatedNodeHeight - data.h
-      nextGraph.data[relatedNodeId].y = nextGraph.data[relatedNodeId].y + data.h
+      const prevRelatedY = nextGraph.data[relatedNodeId].y
+      nextGraph.data[relatedNodeId].y = nextGraph.data[nodeId].h + nextGraph.data[nodeId].y
+      const nextYDiff = nextGraph.data[relatedNodeId].y - prevRelatedY
+      nextGraph.data[relatedNodeId].h = nextGraph.data[relatedNodeId].h - nextYDiff
     })
     return nextGraph
   }
@@ -234,7 +246,6 @@ export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEven
         // adjust width in the same direction but not offset
         const relatedNodeWidth = nextGraph.data[relatedNodeId].w
         nextGraph.data[relatedNodeId].w = relatedNodeWidth + data.w
-        // FIXME: this quick fixes a % value difference issue
         nextGraph.data[relatedNodeId].x = nextGraph.data[nodeId].x
       } else {
         // adjust width in the opposite direction and offset in same direction
@@ -244,23 +255,31 @@ export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEven
     })
     return nextGraph
   }
-  // TV only impact a minimal number of other nodes (since these edges will not be container-wide like horizontal edges)
+
   if (edgeType === 'TV') {
+    const prevY = nextGraph.data[nodeId].y
+    const yDiff = prevY - data.h
     if (data.h + nodeData.y + nodeData.h < MINIMUM_THRESHOLD) {
       return nextGraph
     }
-    if ( data.h > MINIMUM_THRESHOLD) {
+    if ( nodeData.h < MINIMUM_THRESHOLD && yDiff < 0 ) {
+      return nextGraph
+    }
+    const tooSmallTVOnlySmallNodes = tvRelatedNodes.filter( nodeId => {
+      const relatedNode = nextGraph.data[nodeId] 
+      return relatedNode.h < MINIMUM_THRESHOLD && yDiff > 0
+    })
+    if (tooSmallTVOnlySmallNodes.length) {
+      return nextGraph
+    }
+    if (data.h > MINIMUM_THRESHOLD) {
       nextGraph.data[nodeId].y = data.h
-      if (!bvRelatedNodes.length) {
-        nextGraph.data[nodeId].h = 1 - nodeData.y
-      } else {
-        bvRelatedNodes.forEach( relatedNodeId => {
-          nextGraph.data[nodeId].h = nextGraph.data[relatedNodeId].y
+      nextGraph.data[nodeId].h = nextGraph.data[nodeId].h + (prevY - data.h)
+      if (tvRelatedNodes.length) {
+        tvRelatedNodes.forEach( relatedNodeId => {
+          nextGraph.data[relatedNodeId].h = data.h - nextGraph.data[relatedNodeId].y
         })
       }
-      tvRelatedNodes.forEach( relatedNodeId => {
-        nextGraph.data[relatedNodeId].h = nextGraph.data[nodeId].y
-      })
     }
     return nextGraph
   }

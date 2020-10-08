@@ -95,7 +95,7 @@ const Panel: React.FunctionComponent<PanelProps> = (props) => {
           <div
             data-testid={`panel__${panelId}__bv`}
             onMouseDown={event => onMouseDown(event, panelId, 'BV')}
-            className={`${showEdge(y === 0 && y + h <= 0.99, bottomEdgeClassName )} panel-vertical-edge`}
+            className={`${showEdge(y + h <= 0.99, bottomEdgeClassName )} panel-vertical-edge`}
           />
         </div>
       <div

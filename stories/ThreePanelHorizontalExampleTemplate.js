@@ -48,11 +48,6 @@ function App() {
       > 
         <PanelManager
           onPanelDataChange={ nextPanelData => setPanelData(nextPanelData)}
-          panelComponents={[
-            {id: 'A', PanelComponent: PanelA},
-            {id: 'B', PanelComponent: PanelB},
-            {id: 'C', PanelComponent: PanelC},
-          ]}
           panelData={panelData}
         >
           <Panel panelId='A'>

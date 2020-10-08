@@ -5,6 +5,7 @@
 [![NPM total downloads](https://img.shields.io/npm/dt/react-panel-system.svg?style=flat)](https://npmcharts.com/compare/react-panel-system?minimal=true)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-panel-system.svg?style=flat)](https://npmcharts.com/compare/react-panel-system?minimal=true)
 [![stephenc222](https://circleci.com/gh/stephenc222/react-panel-system.svg?style=shield)](https://app.circleci.com/pipelines/github/stephenc222)
+[![codecov](https://codecov.io/gh/stephenc222/react-panel-system/branch/master/graph/badge.svg)](https://codecov.io/gh/stephenc222/react-panel-system)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 A system of resizable, persistent and configurable panels. Built with React.

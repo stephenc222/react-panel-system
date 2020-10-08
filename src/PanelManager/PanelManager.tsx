@@ -112,10 +112,7 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
       if (nextPanelHeightPercent === 0 || isNaN(nextPanelHeightPercent)) {
         return
       }
-      const diffChange = nextPanelHeightPercent - currentHeightPercent
-      const yDiff = edgeType === 'BV'
-        ? diffChange
-        : nextPanelHeightPercent
+      const yDiff = nextPanelHeightPercent
       const changeEvent: PanelChangeEvent = {
         nodeId,
         edgeType,
