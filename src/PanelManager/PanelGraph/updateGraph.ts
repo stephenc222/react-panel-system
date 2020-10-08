@@ -115,13 +115,10 @@ export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEven
     return nextGraph
   }
   const panelIds = Object.keys(nextGraph.data) 
-  // BV means these nodes will have a height change and y change
   const bvRelatedNodes = nextGraph.adjList.find( node =>
     Object.keys(node)[0] === nodeId )[nodeId].bv || []
-  // if the change node width did not change, then the horizontally related node widths will not change
 
   if (edgeType === 'BV') {
-    // the node in question has only height change and no offset change
     if (nextGraph.data[nodeId].y + nextGraph.data[nodeId].h === 1) {
       return nextGraph
     }
@@ -137,13 +134,10 @@ export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEven
     })
     return nextGraph
   }
-    // TV means these nodes will only have a height change and no y change
   const tvRelatedNodes = nextGraph.adjList.find( node =>
     Object.keys(node)[0] === nodeId )[nodeId].tv || []
-  // if event was on the RE of a node:
-  // if node also has a TV or BV relationship, only adjust it's width, else adjust it's width and x offset
+  
   if (edgeType === 'RE') {
-  // RE means these related nodes will have a width and x change
   const reRelatedNodes = nextGraph.adjList.find( node => 
     Object.keys(node)[0] === nodeId )[nodeId].re || []
     // if this is on the edge of the container, don't change anything

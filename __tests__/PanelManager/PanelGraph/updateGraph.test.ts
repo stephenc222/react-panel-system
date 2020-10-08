@@ -20,7 +20,7 @@ describe('updateGraph', () => {
     }
     expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(originalPanelGraph)
   })
-  it('should return return an expected new graph with 1% width decrease from left edge of panel B', () => {
+  it('should return an expected new graph with 1% width decrease from left edge of panel B', () => {
     const originalPanelGraph = {
       data: {
         A: { x: 0, y: 0, w: 0.5, h: 1 },
@@ -48,7 +48,7 @@ describe('updateGraph', () => {
     }
     expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
   })
-  it('should return return an expected new graph with 1% width increase from right edge of panel A', () => {
+  it('should return an expected new graph with 1% width increase from right edge of panel A', () => {
     const originalPanelGraph = {
       data: {
         A: { x: 0, y: 0, w: 0.5, h: 1 },
@@ -76,7 +76,7 @@ describe('updateGraph', () => {
     }
     expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
   })
-  it('should return return an expected new graph with 1% height increase from top edge of panel B', () => {
+  it('should return an expected new graph with 1% height increase from top edge of panel B', () => {
     const originalPanelGraph = {
       data: {
         A: { x: 0, y: 0, w: 1, h: 0.5 },
@@ -110,7 +110,7 @@ describe('updateGraph', () => {
     }
     expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
   })
-  it('should return return an expected new graph with 1% height decrease from bottom edge of panel A', () => {
+  it('should return an expected new graph with 1% height decrease from bottom edge of panel A', () => {
     const originalPanelGraph = {
       data: {
         A: { x: 0, y: 0, w: 1, h: 0.5 },
@@ -137,6 +137,80 @@ describe('updateGraph', () => {
       data: { w: null, h: -0.01 }
     }
     expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
+  })
+  it('should return the same graph due to a top edge-based change that would violate the minimum threshold for a panel size', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.5, h: 0.5 },
+        B: { x: 0, y: 0.5, w: 0.5, h: 0.5 },
+        C: { x: 0.5, y: 0.5, w: 0.5, h: 1.0 }
+      },
+      adjList: [
+        {A: { re: ['C'], le: [], tv: [], bv: ['B'] }},
+        {B: { re: ['C'], le: [], tv: ['A'], bv: [] }},
+        {C: { re: [], le: ['A', 'B'], tv: [], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'B',
+      edgeType: 'TV',
+      data: { w: null, h: -0.97 }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(originalPanelGraph)
+  })
+  it('should return the same graph due to a bottom edge-based change that would violate the minimum threshold for a panel size', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 1, h: 0.5 },
+        B: { x: 0.5, y: 0, w: 1, h: 0.5 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: ['B'] }},
+        {B: { re: [], le: [], tv: ['A'], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'A',
+      edgeType: 'BV',
+      data: { w: null, h: -0.97 }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(originalPanelGraph)
+  })
+  it('should return the same graph due to a left edge-based change that would violate the minimum threshold for a panel size', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.5, h: 1 },
+        B: { x: 0.5, y: 0, w: 0.5, h: 1 }
+      },
+      adjList: [
+        {A: { re: ['B'], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: ['A'], tv: [], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'B',
+      edgeType: 'LE',
+      data: { w: -0.97, h: null }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(originalPanelGraph)
+  })
+  it('should return the same graph due to a right edge-based change that would violate the minimum threshold for a panel size', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.5, h: 1 },
+        B: { x: 0.5, y: 0, w: 0.5, h: 1 }
+      },
+      adjList: [
+        {A: { re: ['B'], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: ['A'], tv: [], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'A',
+      edgeType: 'RE',
+      data: { w: -0.97, h: null }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(originalPanelGraph)
   })
 
 })
