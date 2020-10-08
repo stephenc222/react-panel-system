@@ -17,7 +17,7 @@ export const minimizePanel = (origGraphArr: PanelGraph[], nodeIds: string[] = []
   nodeIds.forEach (nodeId => {
     const nextGraph = nextGraphArr.find( nextGraphItem => Object.keys(nextGraphItem.data).includes(nodeId))
     if (!nextGraph) {
-      return
+      throw new Error(`A PanelGraph object was not found with these nodeIds: ${nodeIds.join('')}`)
     }
     const reRelatedNodes = nextGraph.adjList.find( node => 
       Object.keys(node)[0] === nodeId )[nodeId].re || []
