@@ -65,7 +65,6 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
     const panelDataLayer = panelData.find( panelDataItem => Object.keys(panelDataItem.data).includes(nodeId))
     const currentWidthPercent = panelDataLayer.data[nodeId].w 
     const currentXPercent = panelDataLayer.data[nodeId].x
-    const currentHeightPercent = panelDataLayer.data[nodeId].h
     // if these are not found on the panel manager ref, assume non-user environment,
     // like JSDOM, and assume PanelManager will take the full screen
     const rect = this.panelManagerRef.current.getBoundingClientRect()
@@ -77,9 +76,6 @@ class PanelManager extends React.Component<PanelManagerProps, PanelManagerState>
     const y = rect.y || 0
     const nextPanelWidthPercent = Math.trunc(((pageX - x) / width) * 10**5) / 10**5
     const nextPanelHeightPercent = Math.trunc(((pageY - y) / height) * 10**5) / 10**5
-    if (nodeId === undefined) {
-      return
-    }
     const { startX, startY } = this.state.startPos
     if (edgeType === 'LE' || edgeType === 'RE') {
       const changeX = edgeType === 'RE' ? getPercentChange(startX, pageX) : getPercentChange(pageX, startX)

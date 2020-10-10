@@ -66,6 +66,40 @@ describe('updateGraph', () => {
     }
     expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
   })
+  it('should return an expected new graph with 1% width increase from right edge of panel A with panel B sharing bottom edge', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.5, h: 1 },
+        B: { x: 0, y: 0.5, w: 0.5, h: 1 },
+        C: { x: 0.5, y: 0, w: 0.5, h: 1 }
+      },
+      adjList: [
+        {A: { re: ['B', 'C'], le: [], tv: [], bv: ['C'] }},
+        {B: { re: [], le: ['A', 'C'], tv: [], bv: [] }},
+        {C: { re: ['B', 'A'], le: [], tv: ['A'], bv: [] }}
+      ]
+    }
+    // TODO: result of a small, "compensated for" rounding issue, in the graph transform.
+    // the rendering of the Panels accounts for minor, small rounding issues
+    const testUpdatedPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.51, h: 1 },
+        B: { x: 0.01, y: 0.5, w: 0.49, h: 1 },
+        C: { x: 0.50, y: 0, w: 0.51, h: 1 }
+      },
+      adjList: [
+        {A: { re: ['B', 'C'], le: [], tv: [], bv: ['C'] }},
+        {B: { re: [], le: ['A', 'C'], tv: [], bv: [] }},
+        {C: { re: ['B', 'A'], le: [], tv: ['A'], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'A',
+      edgeType: 'RE',
+      data: { w: 0.01, h: null }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
+  })
   it('should return an expected new graph with 1% width increase from right edge of panel A', () => {
     const originalPanelGraph = {
       data: {
@@ -129,6 +163,79 @@ describe('updateGraph', () => {
       nodeId: 'B',
       edgeType: 'TV',
       data: { w: null, h: 0.51 }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
+  })
+  it('should return the same graph because the change from the right edge would make the panel too small', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.5, h: 1 },
+        B: { x: 0.5, y: 0, w: 0.5, h: 1 }
+      },
+      adjList: [
+        {A: { re: ['B'], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: ['A'], tv: [], bv: [] }}
+      ]
+    }
+    // TODO: result of a small, "compensated for" rounding issue, in the graph transform.
+    // the rendering of the Panels accounts for minor, small rounding issues
+    const testUpdatedPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.5, h: 1 },
+        B: { x: 0.5, y: 0, w: 0.5, h: 1 }
+      },
+      adjList: [
+        {A: { re: ['B'], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: ['A'], tv: [], bv: [] }}
+      ]
+    }
+    /**
+     * TODO: consider refactor of height change from top edge-based events
+     * to the same basis as other edge-based events.
+     * NOTE: Non-issue for consumers because the event system employed by
+     * react-panel-system is closed externally
+     */ 
+    const testChangeEvent = {
+      nodeId: 'B',
+      edgeType: 'RE',
+      data: { w: -0.10 , h: null }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
+
+  })
+  it('should return the same graph because the change from the bottom edge would make the panel too short', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 1, h: 0.5 },
+        B: { x: 0, y: 0.5, w: 1, h: 0.5 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: ['B'] }},
+        {B: { re: [], le: [], tv: ['A'], bv: [] }}
+      ]
+    }
+    // TODO: result of a small, "compensated for" rounding issue, in the graph transform.
+    // the rendering of the Panels accounts for minor, small rounding issues
+    const testUpdatedPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 1.0, h: 0.5 },
+        B: { x: 0, y: 0.50, w: 1.0, h: 0.50 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: ['B'] }},
+        {B: { re: [], le: [], tv: ['A'], bv: [] }}
+      ]
+    }
+    /**
+     * TODO: consider refactor of height change from top edge-based events
+     * to the same basis as other edge-based events.
+     * NOTE: Non-issue for consumers because the event system employed by
+     * react-panel-system is closed externally
+     */ 
+    const testChangeEvent = {
+      nodeId: 'B',
+      edgeType: 'BV',
+      data: { w: null, h: 0.01 }
     }
     expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testUpdatedPanelGraph)
   })
