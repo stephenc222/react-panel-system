@@ -15,7 +15,7 @@ describe('PanelManager', () => {
       }]
     }]
     const { container } = render(<PanelManager onPanelDataChange={() => null} panelData={testPanelData} />)
-    expect(container.firstChild).toBeEmpty()
+    expect(container.firstChild).toBeEmptyDOMElement()
   })
   it('renders a panel layout of one panel', () => {
     const testPanelData = [{

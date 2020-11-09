@@ -186,6 +186,16 @@ export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEven
         }
       }
     }
+    const anyHorizNodes = nextGraph.adjList.filter( node => {
+      return !node[Object.keys(node)[0]].le.includes(nodeId)
+        && !node[Object.keys(node)[0]].re.includes(nodeId)
+        && Object.keys(node)[0] !== nodeId
+    }).map( node => nextGraph.data[Object.keys(node)[0]])
+    for (let horizNode of anyHorizNodes) {
+      if (nodeData.x + nodeData.w + data.w > horizNode.x) {
+        return nextGraph
+      }
+    }
     nextGraph.data[nodeId].w = nodeData.w + data.w
     reRelatedNodes.forEach( relatedNodeId => {
       if (bvRelatedNodes.find(nodeId => nodeId === relatedNodeId) || tvRelatedNodes.find(nodeId => nodeId === relatedNodeId)) {
@@ -237,6 +247,16 @@ export const updateGraph = ( origGraph: PanelGraph, changeEvent: PanelChangeEven
         if (relatedNode.w - data.w < MINIMUM_THRESHOLD) {
           return nextGraph
         }
+      }
+    }
+    const anyHorizNodes = nextGraph.adjList.filter( node => {
+      return !node[Object.keys(node)[0]].le.includes(nodeId)
+        && !node[Object.keys(node)[0]].re.includes(nodeId)
+        && Object.keys(node)[0] !== nodeId
+    } ).map( node => nextGraph.data[Object.keys(node)[0]])
+    for (let horizNode of anyHorizNodes) {
+      if (horizNode.x + horizNode.w > nodeData.x - data.w) {
+        return nextGraph
       }
     }
     nextGraph.data[nodeId].w = nodeData.w + data.w

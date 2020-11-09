@@ -375,5 +375,97 @@ describe('updateGraph', () => {
     }
     expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(originalPanelGraph)
   })
+  it('should return the same graph from a right edge-based change that would be larger than the next horizontal, non-directly related panel\'s x + width value', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.25, h: 1 },
+        B: { x: 0.75, y: 0, w: 0.25, h: 1 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: [], tv: [], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'A',
+      edgeType: 'RE',
+      data: { w: 0.7, h: null }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(originalPanelGraph)
+  })
+  it('should return the same graph from a left edge-based change that would be larger than the next horizontal, non-directly related panel\'s x + width value', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.25, h: 1 },
+        B: { x: 0.75, y: 0, w: 0.25, h: 1 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: [], tv: [], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'A',
+      edgeType: 'LE',
+      data: { w: 0.7, h: null }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(originalPanelGraph)
+  })
+  it('should return the next graph from a left edge-based change with no right-edge directly related panel', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.25, h: 1 },
+        B: { x: 0.75, y: 0, w: 0.25, h: 1 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: [], tv: [], bv: [] }}
+      ]
+    }
+    const testPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.25, h: 1 },
+        B: { x: 0.85, y: 0, w: 0.15, h: 1 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: [], tv: [], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'B',
+      edgeType: 'LE',
+      data: { w: -0.1, h: null }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testPanelGraph)
+  })
+  it('should return the next graph from a right edge-based change with no right-edge directly related panel', () => {
+    const originalPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.25, h: 1 },
+        B: { x: 0.75, y: 0, w: 0.25, h: 1 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: [], tv: [], bv: [] }}
+      ]
+    }
+    const testPanelGraph = {
+      data: {
+        A: { x: 0, y: 0, w: 0.35, h: 1 },
+        B: { x: 0.75, y: 0, w: 0.25, h: 1 }
+      },
+      adjList: [
+        {A: { re: [], le: [], tv: [], bv: [] }},
+        {B: { re: [], le: [], tv: [], bv: [] }}
+      ]
+    }
+    const testChangeEvent = {
+      nodeId: 'A',
+      edgeType: 'RE',
+      data: { w: 0.1, h: null }
+    }
+    expect(updateGraph(originalPanelGraph, testChangeEvent)).toEqual(testPanelGraph)
+  })
 
 })
