@@ -1,6 +1,9 @@
+/**
+ * @jest-environment jsdom
+ */
 import React from 'react'
 import sinon from 'sinon'
-import { render, fireEvent, waitFor, screen } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import Panel from '../../src/Panel'
 

@@ -1,5 +1,8 @@
+/**
+ * @jest-environment jsdom
+ */
 import React, { useState } from 'react'
-import { render, fireEvent, waitFor, screen, getByTestId, getByText } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import PanelManager from '../../src/PanelManager'
 import Panel from '../../src/Panel'
