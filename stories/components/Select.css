@@ -1,4 +1,6 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: inherit;
 }
 
@@ -6,7 +8,7 @@ body {
   box-sizing: border-box;
   margin: 10px;
   color: #081f2c;
-  font: 400 13px/20px 'Source Sans Pro', sans-serif;
+  font: 400 13px/20px "Source Sans Pro", sans-serif;
 }
 
 svg {
@@ -106,7 +108,7 @@ svg {
 }
 
 .checkbox {
-  content: '';
+  content: "";
   vertical-align: top;
   display: inline-block;
   width: 16px;

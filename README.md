@@ -18,8 +18,8 @@ Demo [here](https://stephenc222.github.io/react-panel-system/).
 
 ```jsx
 import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
-import PanelManager , { minimizePanel, maximizePanel, Panel } from 'react-panel-system'
+import * as ReactDOMClient from "react-dom/client"
+import PanelManager , { Panel } from 'react-panel-system'
 
 // exmple panel data
 const EXAMPLE_PANEL_DATA = [{
@@ -101,13 +101,15 @@ const App = () => {
   )
 }
 
-ReactDOM.render(
+const container = document.getElementById("root")
+
+const root = ReactDOMClient.createRoot(container)
+
+root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
+  </React.StrictMode>
+)
 ```
 
 ## Props

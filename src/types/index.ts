@@ -1,11 +1,10 @@
-
 export interface PanelNodeEdges {
-  [nodeId: string]: { re: string[], le: string[], tv: string[], bv: string[] }
+  [nodeId: string]: { re: string[]; le: string[]; tv: string[]; bv: string[] }
 }
 
 export interface PanelGraph {
   data: {
-    [nodeId: string] : {
+    [nodeId: string]: {
       x: number
       y: number
       w: number
@@ -18,7 +17,7 @@ export interface PanelGraph {
 export interface PanelChangeEvent {
   nodeId: string
   edgeType: string
-  data: { w: number, h: number }
+  data: { w: number; h: number }
 }
 
 export interface PanelDraggingNode {

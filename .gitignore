@@ -24,3 +24,5 @@ yarn-error.log*
 
 # production
 dist
+
+storybook-static

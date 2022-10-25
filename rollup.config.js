@@ -1,45 +1,45 @@
-import babel from '@rollup/plugin-babel'
-import external from 'rollup-plugin-peer-deps-external'
+import babel from "@rollup/plugin-babel"
+import external from "rollup-plugin-peer-deps-external"
 import peerDepsExternal from "rollup-plugin-peer-deps-external"
 import resolve from "@rollup/plugin-node-resolve"
 import commonjs from "@rollup/plugin-commonjs"
 import typescript from "rollup-plugin-typescript2"
-import css from 'rollup-plugin-merge-and-inject-css'
-import pkg from './package.json'
+import css from "rollup-plugin-merge-and-inject-css"
+import pkg from "./package.json"
 
 export default {
-  external: ['react', 'react-dom'],
-  input: 'src/index.ts',
+  external: ["react", "react-dom"],
+  input: "src/index.ts",
   output: [
     {
       file: pkg.main,
       format: "cjs",
-      exports: 'named',
+      exports: "named",
     },
     {
       file: pkg.module,
       format: "esm",
-      exports: 'named',
-    }
+      exports: "named",
+    },
   ],
   plugins: [
     external({
-      packageJsonPath: './package.json',
-      includeDependencies: true 
+      packageJsonPath: "./package.json",
+      includeDependencies: true,
     }),
     css({
-      id: 'react-panel-system'
+      id: "react-panel-system",
     }),
     resolve(),
     peerDepsExternal(),
     typescript({ useTsconfigDeclarationDir: true }),
-    babel({
-      babelHelpers: 'bundled',
-      exclude: 'node_modules/**',
-    }),
     commonjs({
-      include: ['node_modules/**'],
-      exclude: 'node_modules/react**',
-    })
-  ]
+      include: ["node_modules/**"],
+      exclude: "node_modules/react**",
+    }),
+    babel({
+      babelHelpers: "bundled",
+      exclude: "node_modules/**",
+    }),
+  ],
 }

@@ -14,9 +14,7 @@ a {
   color: black;
 }
 
-
-
-@media only screen and (max-width : 400px) {
+@media only screen and (max-width: 400px) {
   #mobile-popup-root {
     position: absolute;
     top: 0;
@@ -27,7 +25,7 @@ a {
     margin: 0;
     display: flex;
     padding: 1em;
-    background-color: rgba(0,0,0,0.85);
+    background-color: rgba(0, 0, 0, 0.85);
     justify-content: center;
     align-items: center;
   }
@@ -37,7 +35,7 @@ a {
     border-radius: 10px;
     text-align: center;
     background-color: white;
-    line-height: 2; 
+    line-height: 2;
   }
   .floating-test-input-box-container {
     display: none;
@@ -66,11 +64,11 @@ button {
   background: blue;
   border-radius: 50px;
   position: relative;
-  transition: background-color .2s;
+  transition: background-color 0.2s;
 }
 
 .react-switch-label .react-switch-button {
-  content: '';
+  content: "";
   position: absolute;
   top: 1px;
   left: 1px;
