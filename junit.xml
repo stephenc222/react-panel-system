@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="39" failures="0" errors="0" time="2.781">
-  <testsuite name="PanelManager" errors="0" failures="0" skipped="0" timestamp="2021-09-23T15:53:27" time="1.346" tests="7">
-    <testcase classname="PanelManager renders null if no children passed" name="PanelManager renders null if no children passed" time="0.022">
+<testsuites name="jest tests" tests="39" failures="0" errors="0" time="18.806">
+  <testsuite name="updateGraph" errors="0" failures="0" skipped="0" timestamp="2022-10-25T15:51:25" time="4.481" tests="18">
+    <testcase classname="updateGraph should return the same graph if edgeType isn&apos;t recognized" name="updateGraph should return the same graph if edgeType isn&apos;t recognized" time="0.053">
     </testcase>
-    <testcase classname="PanelManager renders a panel layout of one panel" name="PanelManager renders a panel layout of one panel" time="0.01">
+    <testcase classname="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" name="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" time="0.002">
     </testcase>
-    <testcase classname="PanelManager should have no change if dragging node is falsy" name="PanelManager should have no change if dragging node is falsy" time="0.027">
+    <testcase classname="updateGraph should return an expected new graph with 1% width decrease from left edge of panel B" name="updateGraph should return an expected new graph with 1% width decrease from left edge of panel B" time="0.002">
     </testcase>
-    <testcase classname="PanelManager should have no width change if the change is NaN or 0" name="PanelManager should have no width change if the change is NaN or 0" time="0.018">
+    <testcase classname="updateGraph should return an expected new graph with 1% width increase from right edge of panel A with panel B sharing bottom edge" name="updateGraph should return an expected new graph with 1% width increase from right edge of panel A with panel B sharing bottom edge" time="0.002">
     </testcase>
-    <testcase classname="PanelManager should have no height change if the change is NaN or 0" name="PanelManager should have no height change if the change is NaN or 0" time="0.014">
+    <testcase classname="updateGraph should return an expected new graph with 1% width increase from right edge of panel A" name="updateGraph should return an expected new graph with 1% width increase from right edge of panel A" time="0.001">
     </testcase>
-    <testcase classname="PanelManager changes PanelA&apos;s height from mousedown on panel edge and mousemove on panel mask" name="PanelManager changes PanelA&apos;s height from mousedown on panel edge and mousemove on panel mask" time="0.016">
+    <testcase classname="updateGraph should return an expected new graph with 1% height increase from top edge of panel B with panel A above and panel C below" name="updateGraph should return an expected new graph with 1% height increase from top edge of panel B with panel A above and panel C below" time="0.001">
     </testcase>
-    <testcase classname="PanelManager changes PanelA&apos;s width from mousedown on panel edge and mousemove on panel mask" name="PanelManager changes PanelA&apos;s width from mousedown on panel edge and mousemove on panel mask" time="0.016">
+    <testcase classname="updateGraph should return the same graph because the change from the right edge would make the panel too small" name="updateGraph should return the same graph because the change from the right edge would make the panel too small" time="0.004">
+    </testcase>
+    <testcase classname="updateGraph should return the same graph because the change from the bottom edge would make the panel too short" name="updateGraph should return the same graph because the change from the bottom edge would make the panel too short" time="0.002">
+    </testcase>
+    <testcase classname="updateGraph should return an expected new graph with 1% height increase from top edge of panel B" name="updateGraph should return an expected new graph with 1% height increase from top edge of panel B" time="0.004">
+    </testcase>
+    <testcase classname="updateGraph should return an expected new graph with 1% height decrease from bottom edge of panel A" name="updateGraph should return an expected new graph with 1% height decrease from bottom edge of panel A" time="0.018">
+    </testcase>
+    <testcase classname="updateGraph should return the same graph due to a top edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a top edge-based change that would violate the minimum threshold for a panel size" time="0.002">
+    </testcase>
+    <testcase classname="updateGraph should return the same graph due to a bottom edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a bottom edge-based change that would violate the minimum threshold for a panel size" time="0.001">
+    </testcase>
+    <testcase classname="updateGraph should return the same graph due to a left edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a left edge-based change that would violate the minimum threshold for a panel size" time="0.001">
+    </testcase>
+    <testcase classname="updateGraph should return the same graph due to a right edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a right edge-based change that would violate the minimum threshold for a panel size" time="0.183">
+    </testcase>
+    <testcase classname="updateGraph should return the same graph from a right edge-based change that would be larger than the next horizontal, non-directly related panel&apos;s x + width value" name="updateGraph should return the same graph from a right edge-based change that would be larger than the next horizontal, non-directly related panel&apos;s x + width value" time="0.001">
+    </testcase>
+    <testcase classname="updateGraph should return the same graph from a left edge-based change that would be larger than the next horizontal, non-directly related panel&apos;s x + width value" name="updateGraph should return the same graph from a left edge-based change that would be larger than the next horizontal, non-directly related panel&apos;s x + width value" time="0.002">
+    </testcase>
+    <testcase classname="updateGraph should return the next graph from a left edge-based change with no right-edge directly related panel" name="updateGraph should return the next graph from a left edge-based change with no right-edge directly related panel" time="0.003">
+    </testcase>
+    <testcase classname="updateGraph should return the next graph from a right edge-based change with no right-edge directly related panel" name="updateGraph should return the next graph from a right edge-based change with no right-edge directly related panel" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="Panel" errors="0" failures="0" skipped="0" timestamp="2021-09-23T15:53:28" time="0.332" tests="4">
-    <testcase classname="Panel renders" name="Panel renders" time="0.005">
-    </testcase>
-    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;left edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;left edge&quot;" time="0.008">
-    </testcase>
-    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;top edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;top edge&quot;" time="0.005">
-    </testcase>
-    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;bottom edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;bottom edge&quot;" time="0.006">
-    </testcase>
-  </testsuite>
-  <testsuite name="minimizePanel" errors="0" failures="0" skipped="0" timestamp="2021-09-23T15:53:29" time="0.16" tests="8">
-    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" time="0.002">
+  <testsuite name="minimizePanel" errors="0" failures="0" skipped="0" timestamp="2022-10-25T15:51:30" time="0.991" tests="8">
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with right edge relationship to B" time="0.004">
     </testcase>
     <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A and C" name="minimizePanel returns the expected PanelGraph array data structure removing B with left edge relationship to A and C" time="0.001">
     </testcase>
-    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with bottom edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with bottom edge relationship to B" time="0.006">
+    <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing A with bottom edge relationship to B" name="minimizePanel returns the expected PanelGraph array data structure removing A with bottom edge relationship to B" time="0.001">
     </testcase>
     <testcase classname="minimizePanel returns the expected PanelGraph array data structure removing B with top edge relationship to A" name="minimizePanel returns the expected PanelGraph array data structure removing B with top edge relationship to A" time="0.001">
     </testcase>
@@ -41,51 +53,39 @@
     </testcase>
     <testcase classname="minimizePanel returns the original panel data if nodeIds is empty" name="minimizePanel returns the original panel data if nodeIds is empty" time="0">
     </testcase>
-    <testcase classname="minimizePanel throws if a PanelGraph object does not contain the requested nodes to minimize" name="minimizePanel throws if a PanelGraph object does not contain the requested nodes to minimize" time="0.023">
+    <testcase classname="minimizePanel throws if a PanelGraph object does not contain the requested nodes to minimize" name="minimizePanel throws if a PanelGraph object does not contain the requested nodes to minimize" time="0.175">
     </testcase>
   </testsuite>
-  <testsuite name="updateGraph" errors="0" failures="0" skipped="0" timestamp="2021-09-23T15:53:29" time="0.149" tests="18">
-    <testcase classname="updateGraph should return the same graph if edgeType isn&apos;t recognized" name="updateGraph should return the same graph if edgeType isn&apos;t recognized" time="0.001">
+  <testsuite name="maximizePanel" errors="0" failures="0" skipped="0" timestamp="2022-10-25T15:51:31" time="1.241" tests="2">
+    <testcase classname="maximizePanel returns the expected PanelGraph array data structure" name="maximizePanel returns the expected PanelGraph array data structure" time="0.018">
     </testcase>
-    <testcase classname="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" name="updateGraph should return the same graph if changeEvent doesn&apos;t have found node" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return an expected new graph with 1% width decrease from left edge of panel B" name="updateGraph should return an expected new graph with 1% width decrease from left edge of panel B" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return an expected new graph with 1% width increase from right edge of panel A with panel B sharing bottom edge" name="updateGraph should return an expected new graph with 1% width increase from right edge of panel A with panel B sharing bottom edge" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return an expected new graph with 1% width increase from right edge of panel A" name="updateGraph should return an expected new graph with 1% width increase from right edge of panel A" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return an expected new graph with 1% height increase from top edge of panel B with panel A above and panel C below" name="updateGraph should return an expected new graph with 1% height increase from top edge of panel B with panel A above and panel C below" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return the same graph because the change from the right edge would make the panel too small" name="updateGraph should return the same graph because the change from the right edge would make the panel too small" time="0">
-    </testcase>
-    <testcase classname="updateGraph should return the same graph because the change from the bottom edge would make the panel too short" name="updateGraph should return the same graph because the change from the bottom edge would make the panel too short" time="0">
-    </testcase>
-    <testcase classname="updateGraph should return an expected new graph with 1% height increase from top edge of panel B" name="updateGraph should return an expected new graph with 1% height increase from top edge of panel B" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return an expected new graph with 1% height decrease from bottom edge of panel A" name="updateGraph should return an expected new graph with 1% height decrease from bottom edge of panel A" time="0">
-    </testcase>
-    <testcase classname="updateGraph should return the same graph due to a top edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a top edge-based change that would violate the minimum threshold for a panel size" time="0">
-    </testcase>
-    <testcase classname="updateGraph should return the same graph due to a bottom edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a bottom edge-based change that would violate the minimum threshold for a panel size" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return the same graph due to a left edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a left edge-based change that would violate the minimum threshold for a panel size" time="0">
-    </testcase>
-    <testcase classname="updateGraph should return the same graph due to a right edge-based change that would violate the minimum threshold for a panel size" name="updateGraph should return the same graph due to a right edge-based change that would violate the minimum threshold for a panel size" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return the same graph from a right edge-based change that would be larger than the next horizontal, non-directly related panel&apos;s x + width value" name="updateGraph should return the same graph from a right edge-based change that would be larger than the next horizontal, non-directly related panel&apos;s x + width value" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return the same graph from a left edge-based change that would be larger than the next horizontal, non-directly related panel&apos;s x + width value" name="updateGraph should return the same graph from a left edge-based change that would be larger than the next horizontal, non-directly related panel&apos;s x + width value" time="0">
-    </testcase>
-    <testcase classname="updateGraph should return the next graph from a left edge-based change with no right-edge directly related panel" name="updateGraph should return the next graph from a left edge-based change with no right-edge directly related panel" time="0.001">
-    </testcase>
-    <testcase classname="updateGraph should return the next graph from a right edge-based change with no right-edge directly related panel" name="updateGraph should return the next graph from a right edge-based change with no right-edge directly related panel" time="0.001">
+    <testcase classname="maximizePanel throws if panelNodeId is null" name="maximizePanel throws if panelNodeId is null" time="0.045">
     </testcase>
   </testsuite>
-  <testsuite name="maximizePanel" errors="0" failures="0" skipped="0" timestamp="2021-09-23T15:53:29" time="0.142" tests="2">
-    <testcase classname="maximizePanel returns the expected PanelGraph array data structure" name="maximizePanel returns the expected PanelGraph array data structure" time="0.001">
+  <testsuite name="PanelManager" errors="0" failures="0" skipped="0" timestamp="2022-10-25T15:51:34" time="6.978" tests="7">
+    <testcase classname="PanelManager renders null if no children passed" name="PanelManager renders null if no children passed" time="0.047">
     </testcase>
-    <testcase classname="maximizePanel throws if panelNodeId is null" name="maximizePanel throws if panelNodeId is null" time="0.005">
+    <testcase classname="PanelManager renders a panel layout of one panel" name="PanelManager renders a panel layout of one panel" time="0.03">
+    </testcase>
+    <testcase classname="PanelManager should have no change if dragging node is falsy" name="PanelManager should have no change if dragging node is falsy" time="0.068">
+    </testcase>
+    <testcase classname="PanelManager should have no width change if the change is NaN or 0" name="PanelManager should have no width change if the change is NaN or 0" time="0.025">
+    </testcase>
+    <testcase classname="PanelManager should have no height change if the change is NaN or 0" name="PanelManager should have no height change if the change is NaN or 0" time="0.032">
+    </testcase>
+    <testcase classname="PanelManager changes PanelA&apos;s height from mousedown on panel edge and mousemove on panel mask" name="PanelManager changes PanelA&apos;s height from mousedown on panel edge and mousemove on panel mask" time="0.043">
+    </testcase>
+    <testcase classname="PanelManager changes PanelA&apos;s width from mousedown on panel edge and mousemove on panel mask" name="PanelManager changes PanelA&apos;s width from mousedown on panel edge and mousemove on panel mask" time="0.046">
+    </testcase>
+  </testsuite>
+  <testsuite name="Panel" errors="0" failures="0" skipped="0" timestamp="2022-10-25T15:51:42" time="2.202" tests="4">
+    <testcase classname="Panel renders" name="Panel renders" time="0.113">
+    </testcase>
+    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;left edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;left edge&quot;" time="0.077">
+    </testcase>
+    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;top edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;top edge&quot;" time="0.026">
+    </testcase>
+    <testcase classname="Panel calls the onMouseDown prop on mouse down event on Panel &quot;bottom edge&quot;" name="Panel calls the onMouseDown prop on mouse down event on Panel &quot;bottom edge&quot;" time="0.029">
     </testcase>
   </testsuite>
 </testsuites>
